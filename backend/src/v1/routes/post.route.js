@@ -5,7 +5,7 @@ const authCheck = require('../middleware/authCheck')
 const User = require("../../models/User.model");
 const Post = require("../../models/post.model");
 
-router.post('/createpost', authCheck, async (req, res, next) => {
+router.post('/createpost', async (req, res, next) => {
     if (req.user) {
         const { PostImage, Caption } = req.body;
         let posts = await Post.create({ User_id: req.user._id, PostImage, Caption });
