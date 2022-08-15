@@ -11,7 +11,7 @@ import PostDisplayOverlay from './components/PostDisplayOverlay';
 import NewPost from './components/NewPost';
 
 function App() {
-  let [showNewPost, setShowNewPost] = React.useState(true);
+  let [showNewPost, setShowNewPost] = React.useState(false);
   React.useEffect(() => {
     if (showNewPost){
       document.body.style.overflow = 'hidden';

@@ -3,6 +3,8 @@ require("./src/v1/database/database.config").connect();
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const app = express();
+var fileupload = require("express-fileupload");
+app.use(fileupload());
 const port = process.env.PORT || 4000;
 const version = "v1"
 const auth = require('./src/v1/routes/auth.route');

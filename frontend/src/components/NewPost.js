@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { css } from 'styled-components'
+import apiPost from '../functions/basic';
 export default function NewPost(props) {
     let show = props.show;
     let [buttonD, setButtonD] = React.useState(false);
@@ -9,6 +10,7 @@ export default function NewPost(props) {
     let [showPart, setShowPart] = React.useState(false);
     let [showEmoji, setShowEmoji] = React.useState(false)
     let [len, setLen] = React.useState(0)
+    let [Output, setOutput] = React.useState(null)
     const handleDrag = function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -43,12 +45,33 @@ export default function NewPost(props) {
         setValue(previous => previous + emoji)
         setButtonD(true)
     }
+    function back(){
+        setShowPart(false)
+        setFile(null)
+        setValue('')
+    }
+    function sharePost(){
+        console.log(File)
+        let data = new FormData()
+        data.append("PostImage", File)
+        data.append("Caption", value)
+        apiPost("post/createpost", data, setOutput)
+    }
+    useEffect(() => {
+        if (Output) {
+            if (!Output.err) {
+                show(false)
+                setFile(null)
+                setValue('')
+            }
+        }
+    },[Output])
     return (
-        <Wrapper>
-            <Container show={showPart}>
+        <Wrapper id='bg' onClick={()=>show(false)}>
+            <Container show={showPart} onClick={(e)=>e.stopPropagation()}>
                 <Header>
                     {File ? 
-                    <button>
+                    <button onClick={back}>
                         <svg color="#262626" fill="#262626" height="24" viewBox="0 0 24 24" width="24">
                             <line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="2.909" x2="22.001" y1="12.004" y2="12.004">
                             </line>
@@ -59,7 +82,7 @@ export default function NewPost(props) {
                     : null}
                     <h4>Create new post</h4>
                     {File ? 
-                    <button>Share</button>
+                    <button onClick={sharePost}>Share</button>
                 : null}
                 </Header>
                 <Form onDragEnter={handleDrag} onDrop={handleDrop} onDragOver={handleDrag}>
@@ -324,6 +347,7 @@ let Container = styled.div`
     height: 75%;
     background: white;
     border-radius: 10px;
+    transition: all 0.5s ease-in-out;
 `
 let Header = styled.div`
     width: 100%;

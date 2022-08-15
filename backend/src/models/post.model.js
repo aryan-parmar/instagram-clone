@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
-    User_id: { type: String, required: true, unique: true },
+    User_id: { type: String, required: true },
     PostImage: { type: String, required: true },
+    Caption: { type: String },
     Likes: { type: Number, default: 0 },
     LikedBy: { type: Array, default: [] },
     Comments: { type: Array, default: [] },

@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import PostDisplayOverlay from './PostDisplayOverlay'
 import PostDisplayProfile from './PostDisplayProfile'
-import { apiCheckLogin } from '../functions/basic'
+import apiPost, { apiCheckLogin } from '../functions/basic'
 export default function ProfilePage() {
     let { profileName } = useParams()
     let { selectedId, setSelected } = React.useState(" ")
@@ -12,6 +12,7 @@ export default function ProfilePage() {
     let navigate = useNavigate();
     React.useEffect(() => {
         apiCheckLogin(setUser)
+        apiPost("/api/user/getprofile", { profileName }, setUser)
     },[])
     React.useEffect(() => {
         if (User) {
