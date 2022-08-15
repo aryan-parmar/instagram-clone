@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
   Following: { type: Array, default: [] },
   Posts: { type: Array, default: [] },
   PendingRequest : { type: Array, default: [] },
+  Bio: { type: String, default: '' },
 });
 
 module.exports = mongoose.model("user", userSchema);

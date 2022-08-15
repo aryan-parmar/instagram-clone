@@ -20,7 +20,6 @@ export default function NewPost(props) {
         e.stopPropagation();
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             const file = e.dataTransfer.files[0];
-            console.log(file);
             setFile(file);
             setShowPart(true);
         }
@@ -51,7 +50,6 @@ export default function NewPost(props) {
         setValue('')
     }
     function sharePost(){
-        console.log(File)
         let data = new FormData()
         data.append("PostImage", File)
         data.append("Caption", value)

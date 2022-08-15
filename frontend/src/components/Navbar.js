@@ -76,6 +76,7 @@ const NavBar = styled.div`
     top: 0;
     left: 0;
     z-index: 1000;
+    overflow: hidden;
 `
 const Nav = styled.div`
     max-width: 70%;

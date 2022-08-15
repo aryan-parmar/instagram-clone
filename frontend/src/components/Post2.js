@@ -1,5 +1,6 @@
 import React from 'react'
 import { css, keyframes } from 'styled-components'
+import { Link } from 'react-router-dom';
 import styled from 'styled-components'
 
 export default function Post2(props) {
@@ -51,8 +52,8 @@ export default function Post2(props) {
         <>
             <PostCard animation={AnimationState}>
                 <Head>
-                    <H href=''><Profile src={props.profile} /></H>
-                    <H href=''>{props.from}</H>
+                    <H to={"/"+props.from}><Profile src={props.profile} /></H>
+                    <H to={"/"+props.from}>{props.from}</H>
                 </Head>
                 <div className='img-root'>
                     <PostImg src={props.post} draggable={false} onDoubleClick={like} />
@@ -60,11 +61,11 @@ export default function Post2(props) {
                 <Foot>
                     <div className='comment-section'>
                         <div className='caption-section'>
-                            <div><span><H href='/'>{props.from}</H></span><p>{props.caption}</p></div>
+                            <div><span><H to={"/"+props.from}>{props.from}</H></span><p>{props.caption}</p></div>
                         </div>
                         {displayComment === [] ? 'No comments' : <>
                             {displayComment.map((comment, index) => (
-                                <div key={index} className='container'><span><H href='/'>{comment.from}</H></span><p>{comment.data}</p></div>
+                                <div key={index} className='container'><span><H to={"/"+comment.from}>{comment.from}</H></span><p>{comment.data}</p></div>
                             ))}
                         </>}
                     </div>
@@ -72,9 +73,9 @@ export default function Post2(props) {
                         <LikeSvg aria-hidden="true" focusable="false" role="img" viewBox="0 0 640 500" liked={likedState} onClick={likeButton}>
                             <path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"></path>
                         </LikeSvg>
-                        <Svg aria-label="Comment" fill="#262626" height="24" viewBox="0 0 48 48" width="24">
+                        <svg aria-label="Comment" fill="#262626" height="24" viewBox="0 0 48 48" width="24">
                             <path clipRule="evenodd" d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z" fillRule="evenodd"></path>
-                        </Svg>
+                        </svg>
                         <h4>{props.likes} likes</h4>
                     </div>
 
@@ -151,13 +152,34 @@ const LikeHeartAnimation = keyframes`
 `
 const PostCard = styled.div`
     display: grid;
-    grid-template-rows: 55px auto;
+    grid-template-rows: 55px auto 150px;
     grid-template-columns: auto;
     /* flex-direction: column; */
-    width: 55%;
+    width: 96%;
     height: max-content;
-    margin-top: -50px;
     gap: 10px ;
+    @media (min-width: 768px) {
+        width: 90%;
+        margin-top: 100px;
+        grid-template-rows: 55px auto 200px;
+    }
+    @media (min-width: 1024px) {
+        margin-top: 0;
+        width: 70%;
+        grid-template-rows: 55px auto;
+    }
+    @media (min-width: 1200px) {
+        width: 60%;
+        grid-template-rows: 55px auto;
+    }
+    @media (min-width: 1600px) {
+        width: 50%;
+        grid-template-rows: 55px auto;
+    }
+    @media (min-width: 1800px) {
+        width: 40%;
+        grid-template-rows: 55px auto;
+    }
     .img-root{
         position: relative;
         background-color: white;
@@ -204,7 +226,7 @@ const Profile = styled.img`
     margin-right: 10px;
     margin-left: 10px;
     `
-const H = styled.a`
+const H = styled(Link)`
     font-weight: 600;
     color: #262626;
     font-size: 14px;
@@ -217,9 +239,9 @@ const H = styled.a`
     }
 `
 const PostImg = styled.img`
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
-    height: auto;
+    height: 100%;
     border-radius: 10px;
     min-height: 300px;
     z-index: 50;
@@ -235,10 +257,20 @@ const Foot = styled.div`
     background-color: white;
     border: 1px solid rgb(211, 211, 211);
     border-radius: 10px;
+    height: 100%;
+    @media (max-width: 768px) {
+        grid-column: 1;
+        grid-row: 3
+        /* height: 50px; */
+    }
     .button-group{
         margin-top: 10px;
         width: 100%;
         display: flex;
+        order: 0;
+        @media (min-width: 768px) {
+            order: 1;
+        }
         /* justify-content: center; */
         align-items: center;
         h4{
@@ -283,6 +315,7 @@ const Foot = styled.div`
         margin-bottom: 2px;
     }
     .comment-section{
+        order: 1;
         align-self: flex-start;
         width: 92%;
         margin-left: 13px;
@@ -290,6 +323,9 @@ const Foot = styled.div`
         /* flex: 1; */
         height: 25rem;
         overflow-y: auto;
+        @media (min-width: 768px) {
+            order: 0;
+        }
         .container{
             margin: 20px 0;
             text-align: left;
@@ -322,6 +358,7 @@ const LikeSvg = styled.svg`
     path{
         transform: translate(10%);
     }
+    margin-right: 10px;
 `
 const Svg = styled.svg`
     cursor: pointer;
@@ -331,8 +368,13 @@ const Svg = styled.svg`
         stroke-width: 0rem;
         fill: red;
     `}
+    display: none;
+    @media (min-width: 768px) {
+        display: block;
+    }
 `
 const CommentSection = styled.section`
+    order:2;
     display: flex;
     width: 100%;
     align-items: center;
@@ -346,6 +388,7 @@ const CommentSection = styled.section`
         outline: none;
         color: #262626;
         font-size: 14px;
+        margin-left: 10px;
     }
     input[type='submit']{
         background-color: transparent;

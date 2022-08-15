@@ -1,10 +1,12 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { Link } from 'react-router-dom'
-export default function PostDisplayProfile() {
+import url from '../url.json'
+export default function PostDisplayProfile(props) {
     let [mouse, setMouse] = React.useState(false);
+    let post = props.post;
+    let server = url.server;
     let Like = 12;
-    let imageId = "kdoedkoed1234";
     function mouseOn(){
         setMouse(true);
     }
@@ -12,10 +14,10 @@ export default function PostDisplayProfile() {
         setMouse(false);
     }
     return (
-        <Link style={{ width: "100%", height: "100%", position: "relative",borderRadius: "10px" }} to="/post/mrfmigjirj">
-            <Image src="/user.jpg" alt="Post"/>
+        <Link style={{ width: "100%", height: "100%", position: "relative",borderRadius: "10px" }} to={"/post/"+post._id}>
+            <Image src={server+post.PostImage} alt="Post"/>
             <Data mouse={mouse} onMouseEnter={mouseOn} onMouseLeave={mouseOut}>
-                <span><img src="/heart.png" alt=""/>{Like}</span>
+                <span><img src="/heart.png" alt=""/>{post.Likes}</span>
             </Data>
         </Link>
     )
@@ -24,6 +26,7 @@ let Image = styled.img`
     width: 100%;
     height: 100%;
     border-radius: 10px;
+    object-fit: cover;
     `
 let Data = styled.div`
     position: absolute;

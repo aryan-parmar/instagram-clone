@@ -5,64 +5,75 @@ import styled from 'styled-components'
 import PostDisplayOverlay from './PostDisplayOverlay'
 import PostDisplayProfile from './PostDisplayProfile'
 import apiPost, { apiCheckLogin } from '../functions/basic'
+import url from '../url.json'
 export default function ProfilePage() {
     let { profileName } = useParams()
     let { selectedId, setSelected } = React.useState(" ")
     let [User, setUser] = React.useState(null)
+    let [data, setData] = React.useState(null)
+    let server = url.server
     let navigate = useNavigate();
     React.useEffect(() => {
-        apiCheckLogin(setUser)
-        apiPost("/api/user/getprofile", { profileName }, setUser)
-    },[])
+        // apiCheckLogin(setUser)
+        apiPost("post/getprofile", { profileName }, setData)
+    }, [])
+    // React.useEffect(() => {
+    //     if (User) {
+    //         if (User['err'] === "A token is required for authentication" || User['err'] === "Invalid Token") {
+    //             // navigate('/login')
+    //         }
+    //         // else console.info("error:"+User.err)
+    //     }
+    // },[User])
+
     React.useEffect(() => {
-        if (User) {
-            if (User['err'] === "A token is required for authentication" || User['err'] === "Invalid Token") {
-                // navigate('/login')
+        if (data) {
+            if (data['err']==="Profile Not Found") {
+                navigate('/')
             }
-            // else console.info("error:"+User.err)
+            else {
+                console.log(data)
+            }
         }
-    },[User])
+    })
     // document.body.style.overflow = "hidden"
     return (
-        <div style={{position:"relative",overflow:" hidden"}}>
-            {/* <PostDisplayOverlay selectedId={selectedId} setSelected={setSelected} /> */}
-            <Container>
-                <div className='details'>
-                    <ProfileImage src="/img.jpg" />
-                    <ProfileData>
-                        <h1>{profileName}</h1>
-                        <div>
-                            <h4><span>3</span> posts</h4>
-                            <Link to="/" style={{ textDecoration: 'none' }}><h4><span>153</span> followers</h4></Link>
-                            <Link to="/" style={{ textDecoration: 'none' }}><h4><span>196</span> following</h4></Link>
-                        </div>
-                        <h3>Aryan</h3>
-                        <p>
-                            this is My Bio<br />
-                            testing<br />
-                            1234<br />
-                        </p>
-                    </ProfileData>
-                </div>
-                <div style={{ borderTop: "1px solid rgb(211, 211, 211)", width: "70%" }} className="buttons">
-                    <button>POSTS</button>
-                    <button>REELS</button>
-                </div>
-                <div className="posts">
-                    <PostDisplayProfile />
-                    <PostDisplayProfile />
-                    <PostDisplayProfile />
-                    <PostDisplayProfile />
-                    <PostDisplayProfile />
-                    <PostDisplayProfile />
-                    <PostDisplayProfile />
-                    <PostDisplayProfile />
-                    <PostDisplayProfile />
-                </div>
-                <footer>Instagram (R) clone by ARYAN PARMAR</footer>
-            </Container>
+        <>
+            {
+                data && !data.err ?
+                    <div style={{ position: "relative", overflow: " hidden" }}>
+                        {/* <PostDisplayOverlay selectedId={selectedId} setSelected={setSelected} /> */}
+                        <Container>
+                            <div className='details'>
+                                <ProfileImage src={server+data.data.ProfilePicture} />
+                                <ProfileData>
+                                    <h1>{data.data.Username}</h1>
+                                    <div>
+                                        <h4><span>{data.data.Posts.length}</span> posts</h4>
+                                        <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Follower}</span> followers</h4></Link>
+                                        <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Following}</span> following</h4></Link>
+                                    </div>
+                                    <h3>{data.data.FullName}</h3>
+                                    <p>
+                                        {data.data.Bio}
+                                    </p>
+                                </ProfileData>
+                            </div>
+                            <div style={{ borderTop: "1px solid rgb(211, 211, 211)", width: "70%" }} className="buttons">
+                                <button>POSTS</button>
+                                <button>REELS</button>
+                            </div>
+                            <div className="posts">
+                                {data.data.Posts.map((post, index) => (
+                                    <PostDisplayProfile key={index} post={post}/>
+                                ))}
+                            </div>
+                            <footer>Instagram (R) clone by ARYAN PARMAR</footer>
+                        </Container>
 
-        </div>
+                    </div> : <div>Loading</div>
+            }
+        </>
     )
 }
 let Container = styled.div`
