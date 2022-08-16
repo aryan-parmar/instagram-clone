@@ -52,9 +52,14 @@ let ScreenOverlay = styled.div`
 const Container = styled.div`
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: row;
     z-index: 12;
     height: 100%;
     width: 100%;
+    padding-top: 10px;
+    @media (min-width: 425px){
+        align-items: center;
+        padding-top: 0px;
+    }
 `

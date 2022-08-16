@@ -63,7 +63,7 @@ const NavBar = styled.div`
     align-items: center;
     justify-content: center;
     border-top: 1px solid rgb(211, 211, 211);
-    height: 50px;
+    height: 60px;
     background-color: white;
     width: 100%;
     position: sticky;

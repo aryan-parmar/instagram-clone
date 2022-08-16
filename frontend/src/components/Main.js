@@ -35,6 +35,9 @@ export default function Main() {
 }
 const Container = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-start;
+    overflow-y: scroll;
+    height: 100vh;
+    width: 100%;
 `

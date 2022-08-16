@@ -24,4 +24,8 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    width: 100%;
+    @media (min-width: 1000px){
+        width: fit-content;
+    }
 `

@@ -23,6 +23,10 @@ const Container = styled.div`
     position: sticky;
     top: 80px;
     left: 20px;
+    display: none;
+    @media (min-width: 1000px){
+        display: flex;
+    }
 `
 const Head = styled.div`
     display: flex;

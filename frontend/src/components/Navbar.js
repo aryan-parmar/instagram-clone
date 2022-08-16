@@ -2,8 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { apiCheckLogin } from '../functions/basic'
 import styled from "styled-components"
+import {useParams} from 'react-router-dom'
 
 export default function Navbar(props) {
+    let { profileName } = useParams()
+    console.log(profileName)
     let [opacity, setopacity] = React.useState('1')
     let [User, setUser] = React.useState(null)
     let show = props.show;
@@ -24,9 +27,11 @@ export default function Navbar(props) {
 
             <NavBar>
                 <Nav>
+                    {User && profileName ? <h1 className='username'>{User.user.Username}</h1> :
                     <Link to='/'>
                         <Logo src='/logo2x.png' />
                     </Link>
+                    }
                     <SearchContainer opacity={opacity}>
                         <Search placeholder="Search" onChange={SetVisiblity} />
                     </SearchContainer>
@@ -93,6 +98,13 @@ const Nav = styled.div`
     margin: 0;
     @media (min-width: 768px){
         max-width: 70%;
+    }
+    .username{
+        margin-left: 10px;
+        font-weight: 600;
+        font-size: 1.4rem;
+        color: #262626;
+        display: block;
     }
 `
 const Logo = styled.img`

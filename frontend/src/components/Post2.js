@@ -65,7 +65,7 @@ export default function Post2(props) {
                         </div>
                         {displayComment === [] ? 'No comments' : <>
                             {displayComment.map((comment, index) => (
-                                <div key={index} className='container'><span><H to={"/"+comment.from}>{comment.from}</H></span><p>{comment.data}</p></div>
+                                <div key={index} className='container'><p><span><H to={"/"+comment.from}>{comment.from}</H></span>{comment.data}</p></div>
                             ))}
                         </>}
                     </div>
@@ -300,6 +300,7 @@ const Foot = styled.div`
                 margin: 0;
                 font-weight: 400;
                 color: #262626;
+                word-wrap: break-word;
             }
             a{
                 width: max-content;

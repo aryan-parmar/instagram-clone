@@ -153,11 +153,20 @@ const LikeHeartAnimation = keyframes`
 const PostCard = styled.div`
     display: flex;;
     flex-direction: column;
-    width: 32vw;
-    margin-top: 30px;
+    width: 98vw;
+    margin-top: 10px;
+    /* @media (min-width: 500px){
+        width: 60vw;
+    } */
+    @media (min-width: 768px){
+        width: 70vw;
+    }
+    @media (min-width: 1000px){
+        width: 50vw;
+    }
     .img-root{
         position: relative;
-        background-color: white;
+        background-color: #262626;
         width: 100%;
         /* height: 100%; */
         min-height: 300px;
@@ -307,10 +316,14 @@ const Svg = styled.svg`
     cursor: pointer;
     margin-left: 10px;
     position: relative;
+    display: inline-block;
     ${props => props.liked && css`
-        stroke-width: 0rem;
-        fill: red;
+    stroke-width: 0rem;
+    fill: red;
     `}
+    @media (min-width: 768px){
+        display: inline-block;
+    }
 `
 const CommentSection = styled.section`
     display: flex;
