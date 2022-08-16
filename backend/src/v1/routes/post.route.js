@@ -45,7 +45,7 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
             if (requestProfileData) {
                 if (requestProfileData._id.toString() === req.user.user_id || requestProfileData.Follower.includes(req.user.user_id) || !requestProfileData.Private) {
                     let user = await User.findOne({ _id: req.user.user_id })
-                    let posts = await Post.find({ User_id: requestProfileData._id }, { PostImage: 1, _id: 1, Likes: 1 })
+                    let posts = await Post.find({ User_id: requestProfileData._id }, { PostImage: 1, _id: 1, Likes: 1 }).sort({Date: -1})
                     data['Username'] = user.Username
                     data['FullName'] = user.FullName
                     data['Posts'] = posts

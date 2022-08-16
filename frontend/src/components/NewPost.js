@@ -45,9 +45,14 @@ export default function NewPost(props) {
         setButtonD(true)
     }
     function back(){
-        setShowPart(false)
-        setFile(null)
-        setValue('')
+        if(showPart){
+            setShowPart(false)
+            setFile(null)
+            setValue('')
+        }
+        else{
+            show(false)
+        }
     }
     function sharePost(){
         let data = new FormData()

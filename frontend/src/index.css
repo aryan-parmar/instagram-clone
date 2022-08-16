@@ -8,6 +8,7 @@ body {
   padding: 0;
   background-color: #fafafa;
   height: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 .root{
   height: 100%;

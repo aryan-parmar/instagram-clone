@@ -8,6 +8,7 @@ const postSchema = new mongoose.Schema({
     LikedBy: { type: Array, default: [] },
     Comments: { type: Array, default: [] },
     CommentCount: { type: Number, default: 0 },
+    Date: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model("post", postSchema);

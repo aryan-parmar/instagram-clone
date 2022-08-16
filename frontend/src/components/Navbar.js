@@ -25,7 +25,7 @@ export default function Navbar(props) {
             <NavBar>
                 <Nav>
                     <Link to='/'>
-                        <Logo src='/logo.png' />
+                        <Logo src='/logo2x.png' />
                     </Link>
                     <SearchContainer opacity={opacity}>
                         <Search placeholder="Search" onChange={SetVisiblity} />
@@ -68,8 +68,8 @@ const NavBar = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid rgb(211, 211, 211);
-    height: 50px;
+    border-bottom: 0;
+    height: 60px;
     background-color: white;
     width: 100%;
     position: sticky;
@@ -77,6 +77,10 @@ const NavBar = styled.div`
     left: 0;
     z-index: 1000;
     overflow: hidden;
+    @media (min-width: 425px){
+        border-bottom: 1px solid rgb(211, 211, 211);
+        height: 50px;
+    }
 `
 const Nav = styled.div`
     max-width: 94%;
@@ -95,6 +99,8 @@ const Logo = styled.img`
     padding-top: 6%;
     cursor: pointer;
     align-self: flex-end;
+    height:33px;
+    width: auto;
 `
 const Search = styled.input`
     height:100%;

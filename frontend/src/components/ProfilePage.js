@@ -77,7 +77,7 @@ export default function ProfilePage() {
                                     </>
                                 }
                             </div>
-                            {/* <footer>Instagram (R) clone by ARYAN PARMAR</footer> */}
+                            <footer></footer>
                         </Container>
 
                      : <div>Loading</div>
@@ -207,6 +207,7 @@ let Container = styled.div`
         grid-template-rows: repeat(auto-fill, 120px);
         gap: 1%;
         @media (min-width: 768px){
+            grid-template-rows: repeat(auto-fill, 200px);
             width: 70%;
             gap: 25px;
         }
