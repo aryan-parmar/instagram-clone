@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const authCheck = require('../middleware/authCheck')
+const authCheckBasic = require('../middleware/authCheckBasic')
 const fs = require('fs');
 const { v4: uuid } = require('uuid')
 const User = require("../../models/User.model");
@@ -33,48 +34,52 @@ router.post('/getpost', authCheck, async (req, res, next) => {
         return res.status(200).json({ err: null, posts })
     };
 })
-router.post('/getprofile', authCheck, async (req, res, next) => {
+router.post('/getprofile', authCheckBasic, async (req, res, next) => {
     if (req.user) {
         let requestProfile = req.body.profileName
         let post = req.body.post
         let data = {}
+        console.log("gg")
         if (requestProfile) {
             let requestProfileData = await User.findOne({ Username: requestProfile })
             if (requestProfileData) {
-                if (requestProfileData._id.toString() === req.user.user_id || requestProfileData.Following.includes(req.user._id) || !requestProfileData.Private) {
+                if (requestProfileData._id.toString() === req.user.user_id || requestProfileData.Follower.includes(req.user.user_id) || !requestProfileData.Private) {
                     let user = await User.findOne({ _id: req.user.user_id })
                     let posts = await Post.find({ User_id: requestProfileData._id }, { PostImage: 1, _id: 1, Likes: 1 })
-                    console.log(posts)
-                    console.log(user)
                     data['Username'] = user.Username
                     data['FullName'] = user.FullName
                     data['Posts'] = posts
+                    data['PostCount'] = posts.length
                     data['Follower'] = requestProfileData.Follower.length
                     data['Following'] = requestProfileData.Following.length
                     data['Bio'] = requestProfileData.Bio
                     data['ProfilePicture'] = requestProfileData.ProfilePicture
+                    data['Rejected'] = false
                     return res.status(200).json({ err: null, data })
                 } else {
-                    let user = await User.findOne({ _id: req.user._id })
-                    data['Username'] = user.Username
-                    data['FullName'] = user.FullName
+                    let posts = await Post.countDocuments({ User_id: requestProfileData._id })
+                    data['Username'] = requestProfileData.Username
+                    data['FullName'] = requestProfileData.FullName
+                    data['PostCount'] = posts
                     data['Posts'] = []
                     data['Follower'] = requestProfileData.Follower.length
+                    data['ProfilePicture'] = requestProfileData.ProfilePicture
                     data['Following'] = requestProfileData.Following.length
                     data['Bio'] = requestProfileData.Bio
+                    data['Rejected'] = true
                     return res.status(200).json({ err: null, data })
                 }
             }
             else {
                 return res.status(404).json({ err: "Profile Not Found" })
             }
-            
-        } 
-        else if(post) {
+
+        }
+        else if (post) {
             let postData = await Post.findOne({ _id: post })
             if (postData) {
                 let user = await User.findOne({ _id: postData.User_id })
-                if (user && (user._id.toString() === req.user.user_id || !user.Private || user.Following.includes(req.user.user_id))) {
+                if (user && (user._id.toString() === req.user.user_id || !user.Private || user.Follower.includes(req.user.user_id))) {
                     data['Username'] = user.Username
                     data['FullName'] = user.FullName
                     data['Posts'] = postData
@@ -82,7 +87,7 @@ router.post('/getprofile', authCheck, async (req, res, next) => {
                     data['ProfilePicture'] = user.ProfilePicture
                     return res.status(200).json({ err: null, data })
                 } else {
-                    return res.status(404).json({ err: "Post Not Found"})
+                    return res.status(404).json({ err: "Post Not Found" })
                 }
             }
             else {
@@ -92,7 +97,33 @@ router.post('/getprofile', authCheck, async (req, res, next) => {
         else {
             console.log("err")
         }
-    };
+    } else {
+        let requestProfile = req.body.profileName
+        if (requestProfile) {
+            let requestProfileData = await User.findOne({ Username: requestProfile })
+            if (requestProfileData) {
+                let data = {}
+                let posts = await Post.countDocuments({ User_id: requestProfileData._id })
+                data['Username'] = requestProfileData.Username
+                data['FullName'] = requestProfileData.FullName
+                data['PostCount'] = posts
+                data['Posts'] = []
+                data['Follower'] = requestProfileData.Follower.length
+                data['ProfilePicture'] = requestProfileData.ProfilePicture
+                data['Following'] = requestProfileData.Following.length
+                data['Bio'] = requestProfileData.Bio
+                data['Rejected'] = true
+                return res.status(200).json({ err: null, data })
+            }
+            else {
+                return res.status(404).json({ err: "Profile Not Found" })
+            }
+        }
+        else {
+            return res.status(404).json({ err: "Profile Not Found" })
+        }
+    }
+    ;
 })
 
 module.exports = router;

@@ -16,7 +16,7 @@ export default function ProfilePage() {
     React.useEffect(() => {
         // apiCheckLogin(setUser)
         apiPost("post/getprofile", { profileName }, setData)
-    }, [])
+    }, [profileName])
     // React.useEffect(() => {
     //     if (User) {
     //         if (User['err'] === "A token is required for authentication" || User['err'] === "Invalid Token") {
@@ -28,7 +28,7 @@ export default function ProfilePage() {
 
     React.useEffect(() => {
         if (data) {
-            if (data['err']==="Profile Not Found") {
+            if (data['err'] === "Profile Not Found") {
                 navigate('/')
             }
             else {
@@ -41,15 +41,13 @@ export default function ProfilePage() {
         <>
             {
                 data && !data.err ?
-                    <div style={{ position: "relative", overflow: " hidden" }}>
-                        {/* <PostDisplayOverlay selectedId={selectedId} setSelected={setSelected} /> */}
                         <Container>
                             <div className='details'>
-                                <ProfileImage src={server+data.data.ProfilePicture} />
+                                <ProfileImage src={server + data.data.ProfilePicture} />
                                 <ProfileData>
                                     <h1>{data.data.Username}</h1>
                                     <div>
-                                        <h4><span>{data.data.Posts.length}</span> posts</h4>
+                                        <h4><span>{data.data.PostCount}</span> posts</h4>
                                         <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Follower}</span> followers</h4></Link>
                                         <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Following}</span> following</h4></Link>
                                     </div>
@@ -64,14 +62,25 @@ export default function ProfilePage() {
                                 <button>REELS</button>
                             </div>
                             <div className="posts">
-                                {data.data.Posts.map((post, index) => (
-                                    <PostDisplayProfile key={index} post={post}/>
-                                ))}
+                                {data.data.Posts.length === 0 ?
+                                    <div className='empty-post-container'>
+                                        <h1>
+                                            {!data.data.Rejected ? "NO POSTS ADD NEW POSTS":
+                                            "PRIVATE ACCOUNT"
+                                            }
+                                        </h1>
+                                    </div>
+                                    :<>
+                                        {data.data.Posts.map((post, index) => (
+                                            <PostDisplayProfile key={index} post={post} />
+                                        ))}
+                                    </>
+                                }
                             </div>
                             <footer>Instagram (R) clone by ARYAN PARMAR</footer>
                         </Container>
 
-                    </div> : <div>Loading</div>
+                     : <div>Loading</div>
             }
         </>
     )
@@ -84,6 +93,18 @@ let Container = styled.div`
     width: 100%;
     height: 100%;
     margin-top: 30px;
+    .empty-post-container{
+        width: 100%;
+        height: 40vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        grid-column: 1 / span 3;
+        h1{
+            font-weight: normal;
+            font-size: 1.5em;
+        }
+    }
     .details{
         max-width: 70%;
         width: 60%;

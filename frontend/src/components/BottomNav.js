@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { apiCheckLogin } from '../functions/basic'
 import styled from "styled-components"
 
-export default function Navbar(props) {
+export default function BottomNav(props) {
     let [opacity, setopacity] = React.useState('1')
     let [User, setUser] = React.useState(null)
     let show = props.show;
@@ -24,12 +24,6 @@ export default function Navbar(props) {
 
             <NavBar>
                 <Nav>
-                    <Link to='/'>
-                        <Logo src='/logo.png' />
-                    </Link>
-                    <SearchContainer opacity={opacity}>
-                        <Search placeholder="Search" onChange={SetVisiblity} />
-                    </SearchContainer>
                     {User && !User['err'] ?
                         <IconGroup>
                             <Link to='/'>
@@ -68,18 +62,22 @@ const NavBar = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid rgb(211, 211, 211);
+    border-top: 1px solid rgb(211, 211, 211);
     height: 50px;
     background-color: white;
     width: 100%;
     position: sticky;
-    top: 0;
+    bottom: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 10000;
     overflow: hidden;
+    background: white;
+    @media (min-width: 768px){
+        display: none;
+        pointer-events: none;
+    }
 `
 const Nav = styled.div`
-    max-width: 94%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -87,75 +85,21 @@ const Nav = styled.div`
     width:100%;
     padding: 0;
     margin: 0;
-    @media (min-width: 768px){
-        max-width: 70%;
-    }
-`
-const Logo = styled.img`
-    padding-top: 6%;
-    cursor: pointer;
-    align-self: flex-end;
-`
-const Search = styled.input`
-    height:100%;
-    transition: all 1s ease;
-    border: 1px solid rgb(211, 211, 211);
-    border-radius: 5px;
-    outline: none;
-    font-size: 0.9rem;
-    width: 200px;
-    background-color: rgb(251, 251, 251);
-    &::placeholder{
-        text-align: center;
-        color: rgb(167, 167, 167);
-    }
-    &:focus::placeholder{
-        text-align: left;
-        padding-left: 9%;
-    }
-`
-const SearchContainer = styled.div`
-    height: 25px;
-    position: relative;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    &::before{
-        content: url(/search-solid.svg);
-        position: absolute;
-        left: 30%;
-        top: 30%;
-        transform: translate(0,-50%);
-        height:12px;
-        width:12px;
-        user-select: none;
-        pointer-events: none;
-        opacity: ${props => props.opacity};
-    }
-    &:focus-within::before{
-        left: 3%;
-    }
-    @media (min-width: 768px){
-        display: flex;
-    }
-
 `
 const IconGroup = styled.div`
-    display: none;
+    display: flex;
+    width: 100%;
     justify-content:space-between;
     align-items:center;
-    @media (min-width: 768px){
-        display: flex;
-    }
 `
 const Icon = styled.svg`
-    margin-left: 15px;
+    margin: 0 15px;
     `
 const Profile = styled.img`
     border-radius: 50%;
+    margin: 0 15px;
     height: 24px;
     width:24px;
-    margin-left: 15px;
 `
 const LoginButton = styled(Link)`
     color: white;

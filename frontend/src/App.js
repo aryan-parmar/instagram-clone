@@ -9,14 +9,15 @@ import SignUp from './components/SignUp';
 import ProfilePage from './components/ProfilePage';
 import PostDisplayOverlay from './components/PostDisplayOverlay';
 import NewPost from './components/NewPost';
+import BottomNav from './components/BottomNav';
 
 function App() {
   let [showNewPost, setShowNewPost] = React.useState(false);
   React.useEffect(() => {
-    if (showNewPost){
+    if (showNewPost) {
       document.body.style.overflow = 'hidden';
     }
-    else{
+    else {
       document.body.style.overflow = 'auto';
     }
   })
@@ -30,6 +31,7 @@ function App() {
               <MainContainer>
                 <Navbar show={setShowNewPost} current={showNewPost} />
                 <Main />
+                <BottomNav show={setShowNewPost} current={showNewPost} />
               </MainContainer>
             </>
           }>
@@ -48,6 +50,7 @@ function App() {
               <MainContainer>
                 <Navbar show={setShowNewPost} current={showNewPost} />
                 <PostDisplayOverlay />
+                <BottomNav show={setShowNewPost} current={showNewPost} />
               </MainContainer>
             </>
           }>
@@ -58,6 +61,7 @@ function App() {
               <MainContainer>
                 <Navbar show={setShowNewPost} current={showNewPost} />
                 <ProfilePage />
+                <BottomNav show={setShowNewPost} current={showNewPost} />
               </MainContainer>
             </>
           }>
