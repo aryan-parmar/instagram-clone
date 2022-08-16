@@ -74,18 +74,6 @@ export default function ProfilePage() {
                                         {data.data.Posts.map((post, index) => (
                                             <PostDisplayProfile key={index} post={post} />
                                         ))}
-                                        {data.data.Posts.map((post, index) => (
-                                            <PostDisplayProfile key={index} post={post} />
-                                        ))}
-                                        {data.data.Posts.map((post, index) => (
-                                            <PostDisplayProfile key={index} post={post} />
-                                        ))}
-                                        {data.data.Posts.map((post, index) => (
-                                            <PostDisplayProfile key={index} post={post} />
-                                        ))}
-                                        {data.data.Posts.map((post, index) => (
-                                            <PostDisplayProfile key={index} post={post} />
-                                        ))}
                                     </>
                                 }
                             </div>
