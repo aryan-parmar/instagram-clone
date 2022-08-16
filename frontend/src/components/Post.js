@@ -164,6 +164,9 @@ const PostCard = styled.div`
     @media (min-width: 1000px){
         width: 50vw;
     }
+    @media (min-width: 1200px){
+        width: 40vw;
+    }
     .img-root{
         position: relative;
         background-color: #262626;

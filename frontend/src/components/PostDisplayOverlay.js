@@ -40,7 +40,7 @@ export default function PostDisplayOverlay() {
 }
 let ScreenOverlay = styled.div`
     width: 100%;
-    height: 90vh;
+    height: 100vh;
     position: relative;
     z-index: 13;
     background-color: #fafafa;

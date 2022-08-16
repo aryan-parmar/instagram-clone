@@ -27,7 +27,7 @@ export default function Navbar(props) {
 
             <NavBar>
                 <Nav>
-                    {User && profileName ? <h1 className='username'>{User.user.Username}</h1> :
+                    {User && profileName && window.screen.width<768 ? <h1 className='username'>{User.user.Username}</h1> :
                     <Link to='/'>
                         <Logo src='/logo2x.png' />
                     </Link>
@@ -100,7 +100,7 @@ const Nav = styled.div`
         max-width: 70%;
     }
     .username{
-        margin-left: 10px;
+        margin-left: 12px;
         font-weight: 600;
         font-size: 1.4rem;
         color: #262626;
