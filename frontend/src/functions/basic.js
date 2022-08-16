@@ -1,5 +1,6 @@
 import axios from 'axios';
-let serverAdd = "http://localhost:4000/api/";
+import url from "../url.json"
+let serverAdd = url.server+"/api/";
 axios.defaults.withCredentials = true
 export default function apiPost(add, params={}, a) {
     axios.post(serverAdd + add, params

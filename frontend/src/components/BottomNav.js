@@ -69,7 +69,7 @@ const NavBar = styled.div`
     position: sticky;
     bottom: 0;
     left: 0;
-    z-index: 10000;
+    z-index: 1000;
     overflow: hidden;
     background: white;
     @media (min-width: 768px){

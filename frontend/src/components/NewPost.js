@@ -67,9 +67,8 @@ export default function NewPost(props) {
     return (
         <Wrapper id='bg' onClick={()=>show(false)}>
             <Container show={showPart} onClick={(e)=>e.stopPropagation()}>
-                <Header>
-                    {File ? 
-                    <button onClick={back}>
+                <Header show={showPart}>
+                    <button onClick={back} className="back">
                         <svg color="#262626" fill="#262626" height="24" viewBox="0 0 24 24" width="24">
                             <line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="2.909" x2="22.001" y1="12.004" y2="12.004">
                             </line>
@@ -77,7 +76,6 @@ export default function NewPost(props) {
                             </polyline>
                         </svg>
                     </button>
-                    : null}
                     <h4>Create new post</h4>
                     {File ? 
                     <button onClick={sharePost}>Share</button>
@@ -181,9 +179,13 @@ let FormContainer = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100%;
+    height: 50%;
     background-color: ${props => props.show ? "#262626" : "white"};
-    border-bottom-left-radius : 10px;
+    border-bottom-left-radius: 0px;
+    @media (min-width: 768px){
+        border-bottom-left-radius: 10px;
+        height: 100%;
+    }
     h3{
         font-weight: normal;
     }
@@ -203,27 +205,34 @@ let FormContainer = styled.div`
     img{
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        border-bottom-left-radius: 10px;
+        object-fit: contain;
+        border-bottom-left-radius: 0px;
+        @media (min-width: 768px){
+            border-bottom-left-radius: 10px;
+        }
     }
 `
 const Svg = styled.svg`
     cursor: pointer;
     margin-left: 10px;
     position: relative;
-    ${props => props.liked && css`
-        stroke-width: 0rem;
-        fill: red;
-    `}
+    display: none;
+    @media (min-width: 768px){
+        display: block;
+    }
 `
 const CommentSection = styled.section`
     display: flex;
     width: 100%;
     align-items: center;
-    justify-content: space-between;
+    justify-content: end;
     margin: 20px 0;
     margin-bottom: 18px;
     position: relative;
+    @media (min-width: 768px){
+
+        justify-content: space-between;
+    }
     h6{
         margin: 0;
         color: #262626;
@@ -279,8 +288,11 @@ let FormContainer2 = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 70%;
+    width: 100%;
     height: 100%;
+    @media (min-width: 768px){
+        width:70%;
+    }
     .profile-dat{
         display: flex;
         align-items: center;
@@ -321,9 +333,13 @@ let FormContainer2 = styled.div`
 let Form = styled.form`
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
     width: 100%;
     height: 93%;
+    @media (min-width: 768px){
+        flex-direction: row;
+    }
 `
 let Input = styled.input`
     display: none;
@@ -339,27 +355,49 @@ let Wrapper = styled.div`
     z-index: 10000;
     align-self: start;
     overflow: hidden;
+    top:0;
+    left:0;
 `
 let Container = styled.div`
-    width: ${props => props.show ? "65%" : "35%"};
-    height: 75%;
+    width: 100%;
+    height: 100%;
     background: white;
-    border-radius: 10px;
+    border-radius: 0px;
     transition: all 0.5s ease-in-out;
+    @media (min-width: 768px){
+        width: ${props => props.show ? "65%" : "35%"};
+        height: 75%;
+        border-radius: 10px;
+    }
 `
 let Header = styled.div`
     width: 100%;
-    height: 40px;
+    height: 50px;
     display: flex;
     border-bottom: 1px solid rgb(211, 211, 211);
     justify-content: center;
     align-items: center;
+    @media (min-width: 768px){
+        height: 40px;
+    }
     h4{
         margin: 0;
-        font-size: 1rem;
+        font-size: 1.2rem;
         font-weight: 500;
         flex: 1;
         text-align: center;
+        @media (min-width: 768px){
+            font-size: 1rem;
+        }
+    }
+    .back{
+        position: ${props=> !props.show ? "absolute" : "relative"};
+        left:0;
+        height: max-content;
+        @media (min-width: 768px){
+            position: relative;
+            display: ${props=> props.show ? "flex" : "none"}
+        }
     }
     button{
         margin: 0 10px;

@@ -184,6 +184,8 @@ const PostCard = styled.div`
         position: relative;
         background-color: white;
         width: 100%;
+        max-height: 400px;
+        background-color: #262626;
         /* height: 100%; */
         min-height: 300px;
         grid-column: 1;
@@ -239,7 +241,7 @@ const H = styled(Link)`
     }
 `
 const PostImg = styled.img`
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
     height: 100%;
     border-radius: 10px;

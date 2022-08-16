@@ -32,7 +32,7 @@ export default function ProfilePage() {
                 navigate('/')
             }
             else {
-                console.log(data)
+
             }
         }
     })
@@ -44,20 +44,20 @@ export default function ProfilePage() {
                         <Container>
                             <div className='details'>
                                 <ProfileImage src={server + data.data.ProfilePicture} />
+                                <h1 className='username'>{data.data.Username}</h1>
+                                <div className='data'>
+                                    <h4><span>{data.data.PostCount}</span> posts</h4>
+                                    <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Follower}</span> followers</h4></Link>
+                                    <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Following}</span> following</h4></Link>
+                                </div>
                                 <ProfileData>
-                                    <h1>{data.data.Username}</h1>
-                                    <div>
-                                        <h4><span>{data.data.PostCount}</span> posts</h4>
-                                        <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Follower}</span> followers</h4></Link>
-                                        <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Following}</span> following</h4></Link>
-                                    </div>
                                     <h3>{data.data.FullName}</h3>
-                                    <p>
+                                    <pre>
                                         {data.data.Bio}
-                                    </p>
+                                    </pre>
                                 </ProfileData>
                             </div>
-                            <div style={{ borderTop: "1px solid rgb(211, 211, 211)", width: "70%" }} className="buttons">
+                            <div className="buttons">
                                 <button>POSTS</button>
                                 <button>REELS</button>
                             </div>
@@ -77,7 +77,7 @@ export default function ProfilePage() {
                                     </>
                                 }
                             </div>
-                            <footer>Instagram (R) clone by ARYAN PARMAR</footer>
+                            {/* <footer>Instagram (R) clone by ARYAN PARMAR</footer> */}
                         </Container>
 
                      : <div>Loading</div>
@@ -87,12 +87,18 @@ export default function ProfilePage() {
 }
 let Container = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     width: 100%;
-    height: 100%;
-    margin-top: 30px;
+    height: 100vh;
+    margin-top: 20px;
+    overflow:hidden;
+    @media (min-width: 425px){
+        justify-content: center;
+        height: 100%;
+        margin-top: 30px;
+    }
     .empty-post-container{
         width: 100%;
         height: 40vh;
@@ -106,17 +112,77 @@ let Container = styled.div`
         }
     }
     .details{
-        max-width: 70%;
-        width: 60%;
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 40px;
+        width: 90%;
+        display: grid;
+        grid-template-columns: 85px auto;
+        grid-template-rows: 85px auto;
+        align-items: center;
+        column-gap: 30px;
+        margin-bottom: 0;
+        @media (min-width: 425px){
+            width: 70%
+        }
+        @media (min-width: 768px){
+            margin-bottom: 40px;
+            max-width: 70%;
+            width: 60%;
+            display: grid;
+            grid-template-columns: 150px auto;
+            grid-template-rows: auto auto auto;
+            column-gap: 80px;
+        }
+        .username{
+            margin:0;
+            font-weight: 300;
+            font-size: 28px;
+            color: #262626;
+            /* grid-column: 2;
+            grid-row: 1; */
+            display: none;
+            @media (min-width: 768px){
+                grid-column: 2;
+                grid-row: 1;
+            }
+        }
+        .data{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            grid-column: 2;
+            grid-row: 1;
+            @media (min-width: 768px){
+                grid-column: 2;
+                grid-row: 2;
+            }
+            h4{
+                font-weight: 400;
+                font-size: 16px;
+                color: #262626;
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                @media (min-width: 425px){
+                    display: block;
+                }
+                span{
+                    font-weight: bold;
+                }
+            }
+        }
     }
     .buttons{
         display: flex;
         justify-content: center;
         align-items: center;
         height: 50px;
+        width: 100%;
+        border-top: 1px solid rgb(211, 211, 211);
+        @media (min-width: 425px){
+            width: 70%;
+        }
         button{
             height: 52px;
             border: none;
@@ -135,10 +201,15 @@ let Container = styled.div`
         }
     }
     .posts{
-        width: 70%;
+        width: 98%;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 25px;
+        grid-template-rows: repeat(auto-fill, 120px);
+        gap: 1%;
+        @media (min-width: 768px){
+            width: 70%;
+            gap: 25px;
+        }
     }
     footer{
         margin: 50px 0;
@@ -148,37 +219,31 @@ let Container = styled.div`
     }
 `
 let ProfileImage = styled.img`
-    height: 150px;
+    height: 85px;
     border-radius: 50%;
     cursor: pointer;
+    @media (min-width: 425px){
+    }
+    grid-column: 1;
+    grid-row: 1;
+    @media (min-width: 768px){
+        height: 150px;
+        grid-column: 1;
+        grid-row: 1 / span 3;
+    }
+    
 `
 let ProfileData = styled.div`
-    margin-left: 10%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    width: 45%;
-    h1{
-        margin:0;
-        font-weight: 300;
-        font-size: 28px;
-        color: #262626;
-    }
-    div{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        h4{
-            font-weight: 400;
-            font-size: 16px;
-            color: #262626;
-            margin-bottom: 12px;
-            span{
-                font-weight: 600;
-            }
-        }
+    width: 100%;
+    grid-column: 1 / span 2;
+    grid-row: 2;
+    @media (min-width: 768px){
+        grid-column: 2;
+        grid-row: 3;
     }
     h3{
         margin: 0;
@@ -187,9 +252,13 @@ let ProfileData = styled.div`
         font-size: 16px;
         margin-bottom: 1px;
     }
-    p{
+    pre{
         margin-top: 0;
         font-weight: 400;
         color: #262626;
+        word-wrap: break-word;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
     }
 `
