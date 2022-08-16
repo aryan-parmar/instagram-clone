@@ -14,7 +14,7 @@ export default function PostDisplayProfile(props) {
         setMouse(false);
     }
     return (
-        <Link style={{ width: "100%", height: "100%", position: "relative",borderRadius: "10px", maxHeight:"200px" }} to={"/post/"+post._id}>
+        <Link className='pic-holder' style={{ width: "100%", height: "100%", position: "relative",borderRadius: "10px", maxHeight:"120px" }} to={"/post/"+post._id}>
             <Image src={server+post.PostImage} alt="Post"/>
             <Data mouse={mouse} onMouseEnter={mouseOn} onMouseLeave={mouseOut}>
                 <span><img src="/heart.png" alt=""/>{post.Likes}</span>

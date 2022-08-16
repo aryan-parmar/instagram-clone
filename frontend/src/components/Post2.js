@@ -184,7 +184,7 @@ const PostCard = styled.div`
         position: relative;
         background-color: white;
         width: 100%;
-        max-height: 400px;
+        max-height: 450px;
         background-color: #262626;
         /* height: 100%; */
         min-height: 300px;

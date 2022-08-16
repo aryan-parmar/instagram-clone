@@ -74,6 +74,18 @@ export default function ProfilePage() {
                                         {data.data.Posts.map((post, index) => (
                                             <PostDisplayProfile key={index} post={post} />
                                         ))}
+                                        {data.data.Posts.map((post, index) => (
+                                            <PostDisplayProfile key={index} post={post} />
+                                        ))}
+                                        {data.data.Posts.map((post, index) => (
+                                            <PostDisplayProfile key={index} post={post} />
+                                        ))}
+                                        {data.data.Posts.map((post, index) => (
+                                            <PostDisplayProfile key={index} post={post} />
+                                        ))}
+                                        {data.data.Posts.map((post, index) => (
+                                            <PostDisplayProfile key={index} post={post} />
+                                        ))}
                                     </>
                                 }
                             </div>
@@ -91,13 +103,17 @@ let Container = styled.div`
     align-items: center;
     flex-direction: column;
     width: 100%;
-    height: 100vh;
-    margin-top: 20px;
-    overflow:hidden;
+    height: 100%;
+    /* margin-top: 20px; */
+    overflow-y: scroll;
     @media (min-width: 425px){
-        justify-content: center;
+        width: 100%;
+        /* justify-content: center; */
         height: 100%;
-        margin-top: 30px;
+        padding-top: 3px;
+    }
+    @media (min-width: 768px){
+        padding-top: 0px;
     }
     .empty-post-container{
         width: 100%;
@@ -124,7 +140,7 @@ let Container = styled.div`
         }
         @media (min-width: 768px){
             margin-bottom: 40px;
-            max-width: 70%;
+            /* max-width: 70%; */
             width: 60%;
             display: grid;
             grid-template-columns: 150px auto;
@@ -140,6 +156,7 @@ let Container = styled.div`
             grid-row: 1; */
             display: none;
             @media (min-width: 768px){
+                display: block;
                 grid-column: 2;
                 grid-row: 1;
             }
@@ -154,6 +171,7 @@ let Container = styled.div`
             @media (min-width: 768px){
                 grid-column: 2;
                 grid-row: 2;
+                width: 70%;
             }
             h4{
                 font-weight: 400;
@@ -165,7 +183,7 @@ let Container = styled.div`
                 justify-content: center;
                 flex-direction: column;
                 @media (min-width: 425px){
-                    display: block;
+                    display: flex;
                 }
                 span{
                     font-weight: bold;
@@ -206,10 +224,16 @@ let Container = styled.div`
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: repeat(auto-fill, 120px);
         gap: 1%;
+        height: 400px;
+        @media (min-width: 425px){
+            grid-template-rows: repeat(auto-fill, 120px);
+            width: 70%;
+            gap: 10px;
+        }
         @media (min-width: 768px){
             grid-template-rows: repeat(auto-fill, 200px);
             width: 70%;
-            gap: 25px;
+            gap: 10px;
         }
     }
     footer{
@@ -245,6 +269,7 @@ let ProfileData = styled.div`
     @media (min-width: 768px){
         grid-column: 2;
         grid-row: 3;
+        width: max-content;
     }
     h3{
         margin: 0;
