@@ -10,11 +10,13 @@ with the following variables:
 MONGODB_URI = 'url'
 TOKEN_KEY= 'secret '
 ```
+then run the following code to start server
 ```bash
 cd backend
 yarn install
 node index.js
 ```
+then run the following code to start react development server
 ```bash
 cd frontend
 yarn install
