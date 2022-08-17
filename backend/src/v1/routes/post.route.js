@@ -30,7 +30,7 @@ router.post('/createpost', authCheck, async (req, res, next) => {
 })
 router.post('/getpost', authCheck, async (req, res, next) => {
     if (req.user) {
-        let posts = await Post.find({ User_id: req.user._id })
+        let posts = Post.find().populate('User_id LikedBy', 'Username Fullname Email ProfilePicture').sort({ Date: -1 })
         return res.status(200).json({ err: null, posts })
     };
 })

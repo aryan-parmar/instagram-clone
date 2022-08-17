@@ -435,5 +435,9 @@ let Header = styled.div`
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        &:disabled{
+            opacity:0.5;
+        }
     }
+    
 `

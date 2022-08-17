@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 const userSchema = new mongoose.Schema({
   Username: { type: String, unique: true, required: true },
@@ -9,10 +10,10 @@ const userSchema = new mongoose.Schema({
   ProfilePicture: { type: String, default: '/usercontent/profile/default.jpg' },
   CreatedAt: { type: Date, default: Date.now },
   Private: { type: Boolean, default: true },
-  Follower: { type: Array, default: [] },
-  Following: { type: Array, default: [] },
-  Posts: { type: Array, default: [] },
-  PendingRequest : { type: Array, default: [] },
+  Follower: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+  Following: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+  Posts: [{ type: Schema.Types.ObjectId, ref: 'post' }],
+  PendingRequest : [{ type: Schema.Types.ObjectId, ref: 'user' }],
   Bio: { type: String, default: '' },
 });
 

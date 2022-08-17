@@ -9,6 +9,7 @@ const port = process.env.PORT || 4000;
 const version = "v1"
 const auth = require('./src/v1/routes/auth.route');
 const post = require('./src/v1/routes/post.route');
+const profile = require('./src/v1/routes/profile.route');
 var cors = require('cors')
 app.use(express.json());
 app.use(cookieParser())
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 })
 app.use('/api/auth/', auth);
 app.use('/api/post/', post);
+app.use('/api/profile/', profile);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

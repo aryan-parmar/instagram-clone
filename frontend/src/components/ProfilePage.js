@@ -11,12 +11,18 @@ export default function ProfilePage() {
     let { profileName } = useParams()
     let [User, setUser] = React.useState(null)
     let [data, setData] = React.useState(null)
+    let [action, setAction] = React.useState(null)
     let server = url.server
     let navigate = useNavigate();
     React.useEffect(() => {
         // apiCheckLogin(setUser)
-        apiPost("post/getprofile", { profileName }, setData)
-    }, [profileName])
+        if (!action) {
+            apiPost("post/getprofile", { profileName }, setData)
+        }
+        else if (action && !action['err']) {
+            apiPost("post/getprofile", { profileName }, setData)
+        }
+    }, [profileName, action])
     // React.useEffect(() => {
     //     if (User) {
     //         if (User['err'] === "A token is required for authentication" || User['err'] === "Invalid Token") {
@@ -36,6 +42,20 @@ export default function ProfilePage() {
             }
         }
     })
+    function profileAction() {
+        if (data.data.RUser) {
+            if (data.data.Username !== data.data.RUser)
+                if (data.data.RUserInFollower) {
+                    apiPost("profile/unfollow", { profileName }, setAction)
+                }
+                else {
+                    apiPost("profile/follow", { profileName }, setAction)
+                }
+        }
+        else {
+            navigate('/login')
+        }
+    }
     return (
         <>
             {
@@ -56,15 +76,15 @@ export default function ProfilePage() {
                                 </pre>
                             </ProfileData>
                             <div className='profile-action'>
-                                <button>
+                                <button onClick={profileAction}>
                                     {
                                         data.data.RUser ?
                                             <>
                                                 {
                                                     data.data.Username === data.data.RUser ? "Edit Profile" :
-                                                    <>
-                                                        { data.data.RUserInFollower ? "Unfollow" : "Follow" }
-                                                    </>
+                                                        <>
+                                                            {data.data.RUserInFollower ? "Unfollow" : "Follow"}
+                                                        </>
                                                 }
                                             </>
                                             : "Sign up to follow"

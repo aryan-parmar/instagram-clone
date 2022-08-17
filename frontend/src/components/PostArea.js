@@ -2,14 +2,24 @@ import React from 'react'
 import Post from './Post'
 import styled from 'styled-components'
 import apiPost from '../functions/basic'
+import url from '../url.json'
+
 export default function PostArea() {
     let [posts, setPosts] = React.useState({})
+    let server = url.server
     React.useEffect(() => {
         apiPost('post/getpost',{}, setPosts)
     },[])
     React.useEffect(() => {
-        console.log(posts)
-    },[posts])
+        if (posts) {
+            if (posts['err']) {
+                console.error("error:" + posts.err)
+            }
+            else {
+                console.log(posts)
+            }
+        }
+    }, [posts])
     return (
         <>
             <Container>

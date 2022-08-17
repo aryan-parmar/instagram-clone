@@ -21,7 +21,6 @@ export default function Navbar(props) {
             setopacity('0')
         }
     }
-    console.log(User)
     return (
         <>
 
