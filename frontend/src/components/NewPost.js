@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { css } from 'styled-components'
-import apiPost from '../functions/basic';
+import { useNavigate } from 'react-router-dom'
+import apiPost, { apiCheckLogin } from '../functions/basic';
 export default function NewPost(props) {
     let show = props.show;
     let [buttonD, setButtonD] = React.useState(false);
@@ -11,6 +12,18 @@ export default function NewPost(props) {
     let [showEmoji, setShowEmoji] = React.useState(false)
     let [len, setLen] = React.useState(0)
     let [Output, setOutput] = React.useState(null)
+    let [User, setUser] = React.useState(null)
+    let navigate = useNavigate();
+    React.useEffect(() => {
+        apiCheckLogin(setUser)
+    }, [])
+    React.useEffect(() => {
+        if (User) {
+            if (User['err'] === "A token is required for authentication" || User['err'] === "Invalid Token") {
+                navigate('/login')
+            }
+        }
+    }, [User])
     const handleDrag = function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -44,17 +57,18 @@ export default function NewPost(props) {
         setValue(previous => previous + emoji)
         setButtonD(true)
     }
-    function back(){
-        if(showPart){
+    function back() {
+        if (showPart) {
             setShowPart(false)
             setFile(null)
             setValue('')
         }
-        else{
+        else {
             show(false)
         }
     }
-    function sharePost(){
+    function sharePost(e) {
+        e.target.disabled = true;
         let data = new FormData()
         data.append("PostImage", File)
         data.append("Caption", value)
@@ -68,23 +82,23 @@ export default function NewPost(props) {
                 setValue('')
             }
         }
-    },[Output])
+    }, [Output])
     return (
-        <Wrapper id='bg' onClick={()=>show(false)}>
-            <Container show={showPart} onClick={(e)=>e.stopPropagation()}>
+        <Wrapper id='bg' onClick={() => show(false)}>
+            <Container show={showPart} onClick={(e) => e.stopPropagation()}>
                 <Header show={showPart}>
                     <button onClick={back} className="back">
                         <svg color="#262626" fill="#262626" height="24" viewBox="0 0 24 24" width="24">
-                            <line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="2.909" x2="22.001" y1="12.004" y2="12.004">
+                            <line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="2.909" x2="22.001" y1="12.004" y2="12.004">
                             </line>
-                            <polyline fill="none" points="9.276 4.726 2.001 12.004 9.276 19.274" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            <polyline fill="none" points="9.276 4.726 2.001 12.004 9.276 19.274" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
                             </polyline>
                         </svg>
                     </button>
                     <h4>Create new post</h4>
-                    {File ? 
-                    <button onClick={sharePost}>Share</button>
-                : null}
+                    {File ?
+                        <button onClick={sharePost}>Share</button>
+                        : null}
                 </Header>
                 <Form onDragEnter={handleDrag} onDrop={handleDrop} onDragOver={handleDrag}>
                     <FormContainer show={showPart}>
@@ -98,7 +112,7 @@ export default function NewPost(props) {
                                     <h3>Drag photos and videos here</h3>
                                     <label>
                                         Select image
-                                        <Input type="file" accept="image/png, image/jpg, image/gif, image/jpeg" onChange={(e)=> {setFile(e.target.files[0]); setShowPart(true);}}/>
+                                        <Input type="file" accept="image/png, image/jpg, image/gif, image/jpeg" onChange={(e) => { setFile(e.target.files[0]); setShowPart(true); }} />
                                     </label>
                                 </>
                         }
@@ -107,8 +121,14 @@ export default function NewPost(props) {
                         showPart ?
                             <FormContainer2>
                                 <div className='profile-dat'>
-                                    <img className='profile' src="/user.jpg"></img>
-                                    <h4>aryan</h4>
+                                    {
+                                        User && !User['err'] ?
+                                            <>
+                                                <img className='profile' src={User.user.ProfilePicture}></img>
+                                                <h4>{User.user.Username}</h4>
+                                            </>
+                                            : null
+                                    }
                                 </div>
                                 <div className='post-dat'>
                                     <textarea placeholder='Write a caption....' className='caption' onChange={changeHandler} value={value}></textarea>
@@ -396,12 +416,12 @@ let Header = styled.div`
         }
     }
     .back{
-        position: ${props=> !props.show ? "absolute" : "relative"};
+        position: ${props => !props.show ? "absolute" : "relative"};
         left:0;
         height: max-content;
         @media (min-width: 768px){
             position: relative;
-            display: ${props=> props.show ? "flex" : "none"}
+            display: ${props => props.show ? "flex" : "none"}
         }
     }
     button{

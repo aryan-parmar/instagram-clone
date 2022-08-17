@@ -6,9 +6,9 @@ import PostDisplayOverlay from './PostDisplayOverlay'
 import PostDisplayProfile from './PostDisplayProfile'
 import apiPost, { apiCheckLogin } from '../functions/basic'
 import url from '../url.json'
+import Loading from './Loading'
 export default function ProfilePage() {
     let { profileName } = useParams()
-    let { selectedId, setSelected } = React.useState(" ")
     let [User, setUser] = React.useState(null)
     let [data, setData] = React.useState(null)
     let server = url.server
@@ -36,51 +36,67 @@ export default function ProfilePage() {
             }
         }
     })
-    // document.body.style.overflow = "hidden"
     return (
         <>
             {
                 data && !data.err ?
-                        <Container>
-                            <div className='details'>
-                                <ProfileImage src={server + data.data.ProfilePicture} />
-                                <h1 className='username'>{data.data.Username}</h1>
-                                <div className='data'>
-                                    <h4><span>{data.data.PostCount}</span> posts</h4>
-                                    <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Follower}</span> followers</h4></Link>
-                                    <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Following}</span> following</h4></Link>
-                                </div>
-                                <ProfileData>
-                                    <h3>{data.data.FullName}</h3>
-                                    <pre>
-                                        {data.data.Bio}
-                                    </pre>
-                                </ProfileData>
+                    <Container>
+                        <div className='details'>
+                            <ProfileImage src={server + data.data.ProfilePicture} />
+                            <h1 className='username'>{data.data.Username}</h1>
+                            <div className='data'>
+                                <h4><span>{data.data.PostCount}</span> posts</h4>
+                                <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Follower}</span> followers</h4></Link>
+                                <Link to="/" style={{ textDecoration: 'none' }}><h4><span>{data.data.Following}</span> following</h4></Link>
                             </div>
-                            <div className="buttons">
-                                <button>POSTS</button>
-                                <button>REELS</button>
-                            </div>
-                            <div className="posts">
-                                {data.data.Posts.length === 0 ?
-                                    <div className='empty-post-container'>
-                                        <h1>
-                                            {!data.data.Rejected ? "NO POSTS ADD NEW POSTS":
-                                            "PRIVATE ACCOUNT"
-                                            }
-                                        </h1>
-                                    </div>
-                                    :<>
-                                        {data.data.Posts.map((post, index) => (
-                                            <PostDisplayProfile key={index} post={post} />
-                                        ))}
-                                    </>
-                                }
-                            </div>
-                            <footer></footer>
-                        </Container>
+                            <ProfileData>
+                                <h3>{data.data.FullName}</h3>
+                                <pre>
+                                    {data.data.Bio}
+                                </pre>
+                            </ProfileData>
+                            <div className='profile-action'>
+                                <button>
+                                    {
+                                        data.data.RUser ?
+                                            <>
+                                                {
+                                                    data.data.Username === data.data.RUser ? "Edit Profile" :
+                                                    <>
+                                                        { data.data.RUserInFollower ? "Unfollow" : "Follow" }
+                                                    </>
+                                                }
+                                            </>
+                                            : "Sign up to follow"
+                                    }
 
-                     : <div>Loading</div>
+                                </button>
+                            </div>
+                        </div>
+                        <div className="buttons">
+                            <button>POSTS</button>
+                            <button>REELS</button>
+                        </div>
+                        <div className="posts">
+                            {data.data.Posts.length === 0 ?
+                                <div className='empty-post-container'>
+                                    <h1>
+                                        {!data.data.Rejected ? <>{data.data.Username === data.data.RUser ? "NO POSTS ADD NEW POSTS" : "NO POSTS"}</> :
+                                            "PRIVATE ACCOUNT"
+                                        }
+                                    </h1>
+                                </div>
+                                : <>
+                                    {data.data.Posts.map((post, index) => (
+                                        <PostDisplayProfile key={index} post={post} />
+                                    ))}
+                                </>
+                            }
+                        </div>
+                        <footer></footer>
+                    </Container>
+
+                    : <Loading />
             }
         </>
     )
@@ -122,18 +138,46 @@ let Container = styled.div`
         grid-template-rows: 85px auto;
         align-items: center;
         column-gap: 30px;
+        row-gap: 10px;
         margin-bottom: 0;
+        margin-top: 10px;
         @media (min-width: 425px){
             width: 70%
         }
         @media (min-width: 768px){
             margin-bottom: 40px;
+            margin-top: 0px;
             /* max-width: 70%; */
+            row-gap: 0px;
             width: 60%;
             display: grid;
-            grid-template-columns: 150px auto;
+            grid-template-columns: 150px auto auto;
             grid-template-rows: auto auto auto;
             column-gap: 80px;
+        }
+        .profile-action{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            grid-column: 1 / span 2;
+            button{
+                width: 100%;
+                padding: 10px 0px;
+                margin-bottom: 20px;
+                border-radius: 10px;
+                border: none;
+                outline: none;
+                font-weight: bold;
+            }
+            @media (min-width: 768px){
+                grid-column: 3;
+                grid-row: 1;
+                button{
+                    margin-bottom: 0px;
+                    padding: 5px 0px;
+                    margin-top: 10px;
+                }
+            }
         }
         .username{
             margin:0;
@@ -157,7 +201,7 @@ let Container = styled.div`
             grid-column: 2;
             grid-row: 1;
             @media (min-width: 768px){
-                grid-column: 2;
+                grid-column: 2 / span 3;
                 grid-row: 2;
                 width: 70%;
             }
@@ -233,13 +277,16 @@ let Container = styled.div`
 `
 let ProfileImage = styled.img`
     height: 85px;
+    width: 85px;
     border-radius: 50%;
     cursor: pointer;
+    object-fit: cover;
     @media (min-width: 425px){
     }
     grid-column: 1;
     grid-row: 1;
     @media (min-width: 768px){
+        width: 150px;
         height: 150px;
         grid-column: 1;
         grid-row: 1 / span 3;
@@ -255,7 +302,7 @@ let ProfileData = styled.div`
     grid-column: 1 / span 2;
     grid-row: 2;
     @media (min-width: 768px){
-        grid-column: 2;
+        grid-column: 2 / span 3;
         grid-row: 3;
         width: max-content;
     }

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import apiPost from '../functions/basic'
 import Post2 from './Post2'
 import url from '../url.json'
+import Loading from './Loading'
 
 export default function PostDisplayOverlay() {
     let { post } = useParams()
@@ -33,7 +34,7 @@ export default function PostDisplayOverlay() {
                     </Container>
                 </ScreenOverlay>
                 :
-                <div>Loading....</div>
+                <Loading />
             }
         </>
     )

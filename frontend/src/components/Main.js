@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { apiCheckLogin } from '../functions/basic'
 import PostArea from './PostArea'
 import ProfileData from './ProfileData'
+import Loading from './Loading'
 export default function Main() {
     let [User, setUser] = React.useState(null)
     let navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function Main() {
                             <PostArea user={User.user} />
                             <ProfileData user={User.user} />
                         </>
-                        : <div>Loading...</div>
+                        : <Loading />
                 }
             </Container>
         </>

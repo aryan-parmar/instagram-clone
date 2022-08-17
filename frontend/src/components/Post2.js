@@ -227,6 +227,7 @@ const Profile = styled.img`
     border-radius: 50%;
     margin-right: 10px;
     margin-left: 10px;
+    object-fit: cover;
     `
 const H = styled(Link)`
     font-weight: 600;
@@ -241,7 +242,7 @@ const H = styled(Link)`
     }
 `
 const PostImg = styled.img`
-    object-fit: contain;
+    object-fit: scale-down;
     width: 100%;
     height: 100%;
     border-radius: 10px;
@@ -367,10 +368,6 @@ const Svg = styled.svg`
     cursor: pointer;
     margin-left: 10px;
     position: relative;
-    ${props => props.liked && css`
-        stroke-width: 0rem;
-        fill: red;
-    `}
     display: none;
     @media (min-width: 768px) {
         display: block;

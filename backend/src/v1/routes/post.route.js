@@ -39,15 +39,14 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
         let requestProfile = req.body.profileName
         let post = req.body.post
         let data = {}
-        console.log("gg")
         if (requestProfile) {
             let requestProfileData = await User.findOne({ Username: requestProfile })
-            if (requestProfileData) {
+            let user = await User.findOne({ _id: req.user.user_id })
+            if (requestProfileData && user) {
                 if (requestProfileData._id.toString() === req.user.user_id || requestProfileData.Follower.includes(req.user.user_id) || !requestProfileData.Private) {
-                    let user = await User.findOne({ _id: req.user.user_id })
                     let posts = await Post.find({ User_id: requestProfileData._id }, { PostImage: 1, _id: 1, Likes: 1 }).sort({Date: -1})
-                    data['Username'] = user.Username
-                    data['FullName'] = user.FullName
+                    data['Username'] = requestProfileData.Username
+                    data['FullName'] = requestProfileData.FullName
                     data['Posts'] = posts
                     data['PostCount'] = posts.length
                     data['Follower'] = requestProfileData.Follower.length
@@ -55,6 +54,8 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
                     data['Bio'] = requestProfileData.Bio
                     data['ProfilePicture'] = requestProfileData.ProfilePicture
                     data['Rejected'] = false
+                    data["RUser"] = user.Username
+                    data["RUserInFollower"] = requestProfileData.Follower.includes(req.user.user_id)
                     return res.status(200).json({ err: null, data })
                 } else {
                     let posts = await Post.countDocuments({ User_id: requestProfileData._id })
@@ -67,6 +68,8 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
                     data['Following'] = requestProfileData.Following.length
                     data['Bio'] = requestProfileData.Bio
                     data['Rejected'] = true
+                    data["RUser"] = user.Username
+                    data["RUserInFollower"] = false
                     return res.status(200).json({ err: null, data })
                 }
             }
@@ -107,12 +110,17 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
                 data['Username'] = requestProfileData.Username
                 data['FullName'] = requestProfileData.FullName
                 data['PostCount'] = posts
-                data['Posts'] = []
+                data['Posts'] = [] 
+                if (!requestProfileData.Private) {
+                    data['Posts'] = await Post.find({ User_id: requestProfileData._id }, { PostImage: 1, _id: 1, Likes: 1 }).sort({Date: -1})
+                }
                 data['Follower'] = requestProfileData.Follower.length
                 data['ProfilePicture'] = requestProfileData.ProfilePicture
                 data['Following'] = requestProfileData.Following.length
                 data['Bio'] = requestProfileData.Bio
                 data['Rejected'] = true
+                data["RUser"] = null
+                data["RUserInFollower"] = false
                 return res.status(200).json({ err: null, data })
             }
             else {

@@ -302,7 +302,7 @@ const Foot = styled.div`
 const LikeSvg = styled.svg`
     height: 24px;
     stroke: black;
-    stroke-width: 1.7rem;
+    stroke-width: 1.7em;
     margin-left: 10px;
     fill: white;
     cursor: pointer;
@@ -320,10 +320,6 @@ const Svg = styled.svg`
     margin-left: 10px;
     position: relative;
     display: inline-block;
-    ${props => props.liked && css`
-    stroke-width: 0rem;
-    fill: red;
-    `}
     @media (min-width: 768px){
         display: inline-block;
     }

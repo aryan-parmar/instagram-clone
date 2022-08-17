@@ -12,7 +12,7 @@ const post = require('./src/v1/routes/post.route');
 var cors = require('cors')
 app.use(express.json());
 app.use(cookieParser())
-app.use(express.static('public'))
+app.use(express.static('public',{maxAge: 3600000}));
 app.use(cors({
     origin: 'http://192.168.0.12:3000',
     credentials: true
