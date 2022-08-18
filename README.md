@@ -26,3 +26,4 @@ yarn start
 
 ## to-do
 * private account follow rrequest feature to be added
+* profile requested

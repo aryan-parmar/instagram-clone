@@ -330,16 +330,24 @@ let ProfileData = styled.div`
         margin: 0;
         font-weight: 600;
         color: #262626;
-        font-size: 16px;
+        font-size: 14px;
         margin-bottom: 1px;
+        @media (min-width: 768px){
+            font-size: 16px;
+        } 
     }
     pre{
+        font-size: 14px;
         margin-top: 0;
         font-weight: 400;
         color: #262626;
         word-wrap: break-word;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+        line-height: 1.5;
+        @media (min-width: 768px){
+            font-size: inherit;
+        } 
     }
 `

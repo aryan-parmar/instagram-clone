@@ -15,9 +15,6 @@ export default function PostArea() {
             if (posts['err']) {
                 console.error("error:" + posts.err)
             }
-            else {
-                console.log(posts)
-            }
         }
     }, [posts])
     return (
