@@ -55,7 +55,9 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
                     data['ProfilePicture'] = requestProfileData.ProfilePicture
                     data['Rejected'] = false
                     data["RUser"] = user.Username
-                    data["RUserInFollower"] = requestProfileData.Follower.includes(req.user.user_id)
+                    data["RUserInFollower"] = await requestProfileData.Follower.includes(req.user.user_id)
+                    data["RUserInPending"] = false
+                    if (!data["RUserInFollower"]) data["RUserInPending"] = requestProfileData.PendingRequest.includes(req.user.user_id);
                     return res.status(200).json({ err: null, data })
                 } else {
                     let posts = await Post.countDocuments({ User_id: requestProfileData._id })
@@ -70,6 +72,7 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
                     data['Rejected'] = true
                     data["RUser"] = user.Username
                     data["RUserInFollower"] = false
+                    data["RUserInPending"] = requestProfileData.PendingRequest.includes(req.user.user_id);
                     return res.status(200).json({ err: null, data })
                 }
             }

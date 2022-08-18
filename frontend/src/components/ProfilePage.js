@@ -83,7 +83,13 @@ export default function ProfilePage() {
                                                 {
                                                     data.data.Username === data.data.RUser ? "Edit Profile" :
                                                         <>
-                                                            {data.data.RUserInFollower ? "Unfollow" : "Follow"}
+                                                            {!data.data.RUserInFollower ?
+                                                                <>
+                                                                    {data.data.RUserInPending ? "Requested" : "Follow"}
+                                                                </>
+                                                                :
+                                                                "Unfollow"
+                                                            }
                                                         </>
                                                 }
                                             </>
