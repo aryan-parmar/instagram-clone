@@ -19,7 +19,7 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(cors({
-    origin: 'http://192.168.0.12:3000',
+    origin: 'http://localhost:3000',
     credentials: true
 }))
 app.get('/', (req, res) => {

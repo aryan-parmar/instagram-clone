@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { css , keyframes} from 'styled-components'
 import styled from 'styled-components'
+import apiPost from '../functions/basic'
 
 export default function Post(props) {
     let [buttonD, setButtonD] = React.useState(false);
@@ -10,6 +11,9 @@ export default function Post(props) {
     let [AnimationState, setAnimationState] = React.useState('paused')
     let [likedState, setLikedState] = React.useState(props.liked)
     let displayComment
+    let [data, setData] = React.useState(null)
+    let [likes, setLikes] = React.useState(props.likes)
+    let PostId  = props._id
     if (props.comments !== []) {displayComment = props.comments.slice(0, 2)}
     else{displayComment = []}
     function changeHandler(e) {
@@ -39,13 +43,21 @@ export default function Post(props) {
         setTimeout(() => {
             setAnimationState('paused')
         }, 1000);
-        setLikedState(true)
+        apiPost("post/likeaction", { likedAction: true, PostId }, setData)
+        if(!likedState){
+            setLikes(likes+1)
+            setLikedState(true)
+        }
     }
     function likeButton(){
         if(likedState){
+            apiPost("post/likeaction", { likedAction: false, PostId }, setData)
             setLikedState(false)
+            setLikes(likes-1)
         }else{
+            apiPost("post/likeaction", { likedAction: true, PostId }, setData)
             setLikedState(true)
+            setLikes(likes+1)
         }
     }
     return (
@@ -67,7 +79,7 @@ export default function Post(props) {
                             <path clipRule="evenodd" d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z" fillRule="evenodd"></path>
                         </Svg>
                     </div>
-                    <h4>{props.likes} likes</h4>
+                    <h4>{likes} likes</h4>
                     <div className='caption-section'>
                         <div><span><H to={props.from}>{props.from}</H></span><p>{props.caption}</p></div>
                     </div>

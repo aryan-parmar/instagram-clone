@@ -29,7 +29,7 @@ export default function PostDisplayOverlay() {
             {data && !data.err ?
                 <ScreenOverlay>
                     <Container>
-                        <Post2 post={server + data.data.Posts.PostImage} from={data.data.Username} profile={server + data.data.ProfilePicture} comments={data.data.Posts.Comments} likes={data.data.Posts.Likes} date='' caption={data.data.Posts.Caption}
+                        <Post2 _id={post} post={server + data.data.Posts.PostImage} from={data.data.Username} profile={server + data.data.ProfilePicture} comments={data.data.Posts.Comments} likes={data.data.Posts.Likes} date='' caption={data.data.Posts.Caption}
                             liked={data.data.Posts.LikedBy.includes(data.data.user_id)} />
                     </Container>
                 </ScreenOverlay>

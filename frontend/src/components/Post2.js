@@ -2,6 +2,7 @@ import React from 'react'
 import { css, keyframes } from 'styled-components'
 import { Link } from 'react-router-dom';
 import styled from 'styled-components'
+import apiPost from '../functions/basic'
 
 export default function Post2(props) {
     let [buttonD, setButtonD] = React.useState(false);
@@ -12,6 +13,9 @@ export default function Post2(props) {
     let displayComment
     if (props.comments !== []) { displayComment = props.comments }
     else { displayComment = [] }
+    let [data, setData] = React.useState(null)
+    let [likes, setLikes] = React.useState(props.likes)
+    let PostId  = props._id
     function changeHandler(e) {
         let val = e.target.value
         setValue(val)
@@ -34,18 +38,26 @@ export default function Post2(props) {
         setValue(previous => previous + emoji)
         setButtonD(true)
     }
-    function like() {
+    function like(){
         setAnimationState('running')
         setTimeout(() => {
             setAnimationState('paused')
         }, 1000);
-        setLikedState(true)
-    }
-    function likeButton() {
-        if (likedState) {
-            setLikedState(false)
-        } else {
+        apiPost("post/likeaction", { likedAction: true, PostId }, setData)
+        if(!likedState){
+            setLikes(likes+1)
             setLikedState(true)
+        }
+    }
+    function likeButton(){
+        if(likedState){
+            apiPost("post/likeaction", { likedAction: false, PostId }, setData)
+            setLikedState(false)
+            setLikes(likes-1)
+        }else{
+            apiPost("post/likeaction", { likedAction: true, PostId }, setData)
+            setLikedState(true)
+            setLikes(likes+1)
         }
     }
     return (
@@ -76,14 +88,14 @@ export default function Post2(props) {
                         <svg aria-label="Comment" fill="#262626" height="24" viewBox="0 0 48 48" width="24">
                             <path clipRule="evenodd" d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z" fillRule="evenodd"></path>
                         </svg>
-                        <h4>{props.likes} likes</h4>
+                        <h4>{likes} likes</h4>
                     </div>
 
                     <CommentSection>
                         <Svg aria-label="Emoji" fill="#262626" height="24" viewBox="0 0 48 48" width="24" onClick={openEmojiBox}>
                             <path d="M24 48C10.8 48 0 37.2 0 24S10.8 0 24 0s24 10.8 24 24-10.8 24-24 24zm0-45C12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21S35.6 3 24 3z"></path><path d="M34.9 24c0-1.4-1.1-2.5-2.5-2.5s-2.5 1.1-2.5 2.5 1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5zm-21.8 0c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5-2.5-1.1-2.5-2.5zM24 37.3c-5.2 0-8-3.5-8.2-3.7-.5-.6-.4-1.6.2-2.1.6-.5 1.6-.4 2.1.2.1.1 2.1 2.5 5.8 2.5 3.7 0 5.8-2.5 5.8-2.5.5-.6 1.5-.7 2.1-.2.6.5.7 1.5.2 2.1 0 .2-2.8 3.7-8 3.7z"></path>
                         </Svg>
-                        <Emoji show={showEmoji} id="emoji" onMouseLeave={console.log('r')}>
+                        <Emoji show={showEmoji} id="emoji">
                             <span onClick={addEmoji}>😂</span>
                             <span onClick={addEmoji}>😭</span>
                             <span onClick={addEmoji}>😎</span>

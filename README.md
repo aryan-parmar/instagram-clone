@@ -1,8 +1,5 @@
 # Instagram-clone
 
-<!-- ## Bug fix to-do list
-* post view page navbar error
-* profile navbar fix in desktop view -->
 ## run
 create a .env file in the backend directory
 with the following variables:
@@ -25,5 +22,5 @@ yarn start
 
 
 ## to-do
-* like/dislike feature
 * comment feature
+* optimize user timeline algorithm

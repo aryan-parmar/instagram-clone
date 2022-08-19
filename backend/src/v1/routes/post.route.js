@@ -29,7 +29,7 @@ router.post('/createpost', authCheck, async (req, res, next) => {
                     u.Timeline.unshift(posts._id)
                     u.save()
                 })
-        })
+            })
             res.status(200).json({ err: null })
         })
         // return res.status(200).json({ err: null })
@@ -37,7 +37,7 @@ router.post('/createpost', authCheck, async (req, res, next) => {
 })
 router.post('/getpost', authCheck, async (req, res, next) => {
     if (req.user) {
-        let user = await User.findOne({_id:req.user.user_id},{Timeline:1}).populate("Timeline")
+        let user = await User.findOne({ _id: req.user.user_id }, { Timeline: 1 }).populate("Timeline")
         user = await user.populate({
             path: 'Timeline',
             populate: {
@@ -64,7 +64,7 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
             let user = await User.findOne({ _id: req.user.user_id })
             if (requestProfileData && user) {
                 if (requestProfileData._id.toString() === req.user.user_id || requestProfileData.Follower.includes(req.user.user_id) || !requestProfileData.Private) {
-                    let posts = await Post.find({ User_id: requestProfileData._id }, { PostImage: 1, _id: 1, Likes: 1 }).sort({Date: -1})
+                    let posts = await Post.find({ User_id: requestProfileData._id }, { PostImage: 1, _id: 1, Likes: 1 }).sort({ Date: -1 })
                     data['Username'] = requestProfileData.Username
                     data['FullName'] = requestProfileData.FullName
                     data['Posts'] = posts
@@ -133,9 +133,9 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
                 data['Username'] = requestProfileData.Username
                 data['FullName'] = requestProfileData.FullName
                 data['PostCount'] = posts
-                data['Posts'] = [] 
+                data['Posts'] = []
                 if (!requestProfileData.Private) {
-                    data['Posts'] = await Post.find({ User_id: requestProfileData._id }, { PostImage: 1, _id: 1, Likes: 1 }).sort({Date: -1})
+                    data['Posts'] = await Post.find({ User_id: requestProfileData._id }, { PostImage: 1, _id: 1, Likes: 1 }).sort({ Date: -1 })
                 }
                 data['Follower'] = requestProfileData.Follower.length
                 data['ProfilePicture'] = requestProfileData.ProfilePicture
@@ -156,6 +156,38 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
         }
     }
     ;
+})
+
+router.post('/likeaction', authCheck, async (req, res, next) => {
+    if (req.user) {
+        let likedAction = req.body.likedAction
+        let PostId = req.body.PostId
+        if (PostId) {
+            let user = await User.findOne({ _id: req.user.user_id })
+            let post = await Post.findOne({ _id: PostId })
+            if (!post.LikedBy.includes(req.user.user_id)) {
+                if (likedAction) {
+                    post.LikedBy.unshift(user._id)
+                    post.Likes++
+                    post.save()
+                    return res.status(200).json({ err: null, Liked: true })
+                }
+                else {
+                    return res.status(200).json({ err: null, Liked: false })
+                }
+            }
+            else if (post.LikedBy.includes(req.user.user_id)) {
+                if (!likedAction) {
+                    post.LikedBy.pop(user._id)
+                    post.Likes--
+                    post.save()
+                    return res.status(200).json({ err: null, Liked: false })
+                } else {
+                    return res.status(200).json({ err: null, Liked: true })
+                }
+            }
+        }
+    }
 })
 
 module.exports = router;

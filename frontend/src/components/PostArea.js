@@ -15,7 +15,7 @@ export default function PostArea() {
             if (posts['err']) {
                 console.error("error:" + posts.err)
             }
-            console.log(posts)
+            // console.log(posts)
         }
     }, [posts])
     return (
@@ -28,7 +28,7 @@ export default function PostArea() {
                                 <>
                                     {
                                         posts.posts.Timeline.map((p, ind) => (
-                                            <Post key={ind} post={server + p.PostImage} from={p.User_id.Username} profile={server+p.User_id.ProfilePicture} comments={p.Comments} likes={p.Likes} date='' caption={p.Caption} liked={p.LikedBy.includes(posts.posts._id)} />
+                                            <Post key={ind} _id={p._id} post={server + p.PostImage} from={p.User_id.Username} profile={server+p.User_id.ProfilePicture} comments={p.Comments} likes={p.Likes} date={p.Date} caption={p.Caption} liked={p.LikedBy.includes(posts.posts._id)} />
                                         ))
                                     }
                                 </>
