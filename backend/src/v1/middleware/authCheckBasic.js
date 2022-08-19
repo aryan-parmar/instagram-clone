@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 let User = require("../../models/User.model");
-let serverUrl = "http://localhost:4000";
+let serverUrl = "http://192.168.0.12:4000";
 async function authCheckBasic(req, res, next) {
   const token = req.cookies['token'];
   if (!token) {

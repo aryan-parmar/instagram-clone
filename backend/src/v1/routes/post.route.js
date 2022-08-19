@@ -23,6 +23,13 @@ router.post('/createpost', authCheck, async (req, res, next) => {
                 return res.status(500).json({ err: error.message })
             }
             let posts = await Post.create({ User_id: req.user.user_id, PostImage: "/usercontent/" + folder + Fileid + '.' + fileExt, Caption });
+            let user = await User.findOne({ _id: req.user.user_id }).populate('Follower', 'Username')
+            user.Follower.forEach((follower) => {
+                User.findOne({ Username: follower.Username }).then((u) => {
+                    u.Timeline.unshift(posts._id)
+                    u.save()
+                })
+        })
             res.status(200).json({ err: null })
         })
         // return res.status(200).json({ err: null })
@@ -30,8 +37,21 @@ router.post('/createpost', authCheck, async (req, res, next) => {
 })
 router.post('/getpost', authCheck, async (req, res, next) => {
     if (req.user) {
-        let posts = Post.find().populate('User_id LikedBy', 'Username Fullname Email ProfilePicture').sort({ Date: -1 })
-        // return res.status(200).json({ err: null, posts })
+        let user = await User.findOne({_id:req.user.user_id},{Timeline:1}).populate("Timeline")
+        user = await user.populate({
+            path: 'Timeline',
+            populate: {
+                path: 'User_id',
+                model: 'user',
+                select: 'Username ProfilePicture Following'
+            }
+        })
+        user = await user.populate({
+            path: 'Timeline.User_id.Following',
+            model: 'user',
+            select: 'Username ProfilePicture'
+        })
+        return res.status(200).json({ err: null, posts: user })
     };
 })
 router.post('/getprofile', authCheckBasic, async (req, res, next) => {
@@ -124,6 +144,7 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
                 data['Rejected'] = true
                 data["RUser"] = null
                 data["RUserInFollower"] = false
+                data["RUserInPending"] = false
                 return res.status(200).json({ err: null, data })
             }
             else {

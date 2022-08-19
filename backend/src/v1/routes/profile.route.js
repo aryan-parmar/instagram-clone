@@ -87,7 +87,6 @@ router.post('/confirmFriend', authCheck, async(req,res,next)=>{
     if (req.user){
         let id = req.body.id
         let user = await User.findOne({_id:req.user.user_id},{PendingRequest:1,Follower:1})
-        console.log(req.user.user_id, id)
         let r = await User.findOne({_id: id})
         if (user && id && r){
             user.PendingRequest.pop(id)

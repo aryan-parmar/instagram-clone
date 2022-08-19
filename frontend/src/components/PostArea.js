@@ -5,23 +5,41 @@ import apiPost from '../functions/basic'
 import url from '../url.json'
 
 export default function PostArea() {
-    let [posts, setPosts] = React.useState({})
+    let [posts, setPosts] = React.useState(null)
     let server = url.server
     React.useEffect(() => {
-        apiPost('post/getpost',{}, setPosts)
-    },[])
+        apiPost('post/getpost', {}, setPosts)
+    }, [])
     React.useEffect(() => {
         if (posts) {
             if (posts['err']) {
                 console.error("error:" + posts.err)
             }
+            console.log(posts)
         }
     }, [posts])
     return (
         <>
             <Container>
-                <Post post='/user.jpg' from='Someone_' profile='/user.jpg' comments={[{from: 'aalok_', data:'nice pic'}]} likes='12' date='' caption='yo guys' liked={true}/>
-                <Post post='/user.jpg' from='Someone_' profile='/user.jpg' comments={[{from: 'aalok_', data:'nice pic'}]} likes='12' date='' caption='yo guys' liked={true}/>
+                {
+                    posts && !posts['err'] ?
+                        <>
+                            {posts.posts.Timeline.length !== 0 ?
+                                <>
+                                    {
+                                        posts.posts.Timeline.map((p, ind) => (
+                                            <Post key={ind} post={server + p.PostImage} from={p.User_id.Username} profile={server+p.User_id.ProfilePicture} comments={p.Comments} likes={p.Likes} date='' caption={p.Caption} liked={p.LikedBy.includes(posts.posts._id)} />
+                                        ))
+                                    }
+                                </>
+
+                                : 
+                                <h3>Follow More people to see posts here</h3>
+                            }
+                        </>
+                        :
+                        null
+                }
             </Container>
         </>
     )

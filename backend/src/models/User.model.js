@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
   Posts: [{ type: Schema.Types.ObjectId, ref: 'post' }],
   PendingRequest : [{ type: Schema.Types.ObjectId, ref: 'user' }],
   Bio: { type: String, default: '' },
+  Timeline: [{ type: Schema.Types.ObjectId, ref: 'post' }],
 });
 
 module.exports = mongoose.model("user", userSchema);
