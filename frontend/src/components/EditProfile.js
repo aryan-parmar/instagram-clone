@@ -35,7 +35,10 @@ export default function EditProfile() {
         if (Username === '' || FullName === '' || Email === '') {
             setShowButton(false)
         }
-        else if (Username === User.user.Username && FullName === User.user.FullName && Email === User.user.Email) {
+        else if(file){
+            setShowButton(true)
+        }
+        else if (Username === User.user.Username && FullName === User.user.FullName && Email === User.user.Email && Bio === User.user.Bio) {
             setShowButton(false)
         }
         else {
@@ -59,7 +62,12 @@ export default function EditProfile() {
     }
     React.useEffect(() => {
         handleDisabled()
-    }, [Username, FullName, Email, Bio])
+    }, [Username, FullName, Email, Bio, file])
+    React.useEffect(() => {
+        if (file) {
+            document.querySelector('.profile').src = URL.createObjectURL(file)
+        }
+    }, [file])
     return (
         <>
             {User && !User['err']
@@ -68,7 +76,8 @@ export default function EditProfile() {
                     <Form>
                         <h3>Edit Profile</h3>
                         <div className='profile-section'>
-                            <img src={User.user.ProfilePicture} />
+                            <input type="file" onChange={(e) => setFile(e.target.files[0])} accept="image/png, image/jpg, image/gif, image/jpeg" />
+                            <img src={User.user.ProfilePicture} className="profile" />
                             <h5>Change profile photo</h5>
                         </div>
                         <div className='fields'>
@@ -116,18 +125,27 @@ let Form = styled.form`
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
+        position: relative;
+        input{
+            opacity: 0;
+            position: absolute;
+            height: 100%;
+            width: 120px;
+            cursor: pointer;
+        }
         img{
             width: 100px;
-            cursor: pointer;
             border-radius: 50%;
             height: 100px;
             object-fit: cover;
+            pointer-events: none;
         }
         h5{
             cursor: pointer;
             margin: 0px;
             margin-top: 5px;
             color: #0095f6;
+            pointer-events: none;
         }
     }
     .fields{
