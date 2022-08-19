@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-export default function ProfileData() {
+export default function ProfileData(props) {
     let data = {name: 'aryn__', profile:"/user.jpg", displayName: "__Aryan__"}
+    let user = props.user
     return (
         <>
         <Container>
@@ -12,7 +13,7 @@ export default function ProfileData() {
                     <h5>{data.displayName}</h5>
                 </div>
             </Head>
-            <h5 style={{marginLeft: "10px", color: "#8e8e8e", fontWeight:'600', fontSize: "14px"}}>Your Friends</h5>
+            {/* <h5 style={{marginLeft: "10px", color: "#8e8e8e", fontWeight:'600', fontSize: "14px"}}>Your Friends</h5> */}
         </Container>
         </>
     )

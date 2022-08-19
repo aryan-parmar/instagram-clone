@@ -11,6 +11,7 @@ import PostDisplayOverlay from './components/PostDisplayOverlay';
 import NewPost from './components/NewPost';
 import BottomNav from './components/BottomNav';
 import Me from './components/Me';
+import EditProfile from './components/EditProfile';
 
 function App() {
   let [showNewPost, setShowNewPost] = React.useState(false);
@@ -43,6 +44,17 @@ function App() {
               <MainContainer>
                 <Navbar show={setShowNewPost} current={showNewPost} />
                 <Me/>
+                <BottomNav show={setShowNewPost} current={showNewPost} />
+              </MainContainer>
+            </>
+          }>
+          </Route>
+          <Route path="/account/edit" element={
+            <>
+              {showNewPost ? <NewPost show={setShowNewPost} /> : null}
+              <MainContainer>
+                <Navbar show={setShowNewPost} current={showNewPost} />
+                <EditProfile/>
                 <BottomNav show={setShowNewPost} current={showNewPost} />
               </MainContainer>
             </>

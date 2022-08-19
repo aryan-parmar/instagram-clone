@@ -44,13 +44,16 @@ export default function ProfilePage() {
     })
     function profileAction() {
         if (data.data.RUser) {
-            if (data.data.Username !== data.data.RUser)
+            if (data.data.Username !== data.data.RUser){
                 if (data.data.RUserInFollower) {
                     apiPost("profile/unfollow", { profileName }, setAction)
                 }
                 else {
                     apiPost("profile/follow", { profileName }, setAction)
                 }
+            }else{
+                navigate('/account/edit')
+            }
         }
         else {
             navigate('/login')

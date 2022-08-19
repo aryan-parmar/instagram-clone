@@ -13,6 +13,8 @@ async function authCheck(req, res, next) {
     decoded['Username'] = user.Username;
     decoded['FullName'] = user.FullName;
     decoded['ProfilePicture'] = serverUrl+user.ProfilePicture;
+    decoded['Email'] = user.Email;
+    decoded['Bio'] = user.Bio;
     req.user = decoded;
   } catch (err) {
     return res.status(401).json({ err: "Invalid Token" });
