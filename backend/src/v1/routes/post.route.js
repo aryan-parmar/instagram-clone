@@ -51,6 +51,11 @@ router.post('/getpost', authCheck, async (req, res, next) => {
             model: 'user',
             select: 'Username ProfilePicture'
         })
+        user = await user.populate({
+            path: 'Timeline.Comments.from',
+            model: 'user',
+            select: 'Username ProfilePicture'
+        })
         return res.status(200).json({ err: null, posts: user })
     };
 })
@@ -106,11 +111,17 @@ router.post('/getprofile', authCheckBasic, async (req, res, next) => {
             if (postData) {
                 let user = await User.findOne({ _id: postData.User_id })
                 if (user && (user._id.toString() === req.user.user_id || !user.Private || user.Follower.includes(req.user.user_id))) {
+                    postData = await postData.populate({
+                        path: 'Comments.from',
+                        model: 'user',
+                        select: 'Username ProfilePicture'
+                    })
                     data['Username'] = user.Username
                     data['FullName'] = user.FullName
                     data['Posts'] = postData
                     data['user_id'] = user._id.toString()
                     data['ProfilePicture'] = user.ProfilePicture
+                    data['Comments'] = postData.Comments
                     return res.status(200).json({ err: null, data })
                 } else {
                     return res.status(404).json({ err: "Post Not Found" })
@@ -190,4 +201,22 @@ router.post('/likeaction', authCheck, async (req, res, next) => {
     }
 })
 
+router.post('/comment', authCheck, async (req, res, next) => {
+    if (req.user) {
+        let comment = req.body.Comment
+        let PostId = req.body.PostId
+        if (PostId) {
+            let user = await User.findOne({ _id: req.user.user_id })
+            let post = await Post.findOne({ _id: PostId })
+            if (user && post && comment) {
+                post.Comments.unshift({ from: user._id, Comment: comment })
+                post.save()
+                return res.status(200).json({ err: null, Comment: true, user:user.Username })
+            }
+            else {
+                return res.status(200).json({ err: null, Comment: false })
+            }
+        }
+    }
+})
 module.exports = router;

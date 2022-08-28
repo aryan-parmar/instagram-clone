@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { css , keyframes} from 'styled-components'
+import { css, keyframes } from 'styled-components'
 import styled from 'styled-components'
 import apiPost from '../functions/basic'
 
@@ -10,12 +10,13 @@ export default function Post(props) {
     let [showEmoji, setShowEmoji] = React.useState(false)
     let [AnimationState, setAnimationState] = React.useState('paused')
     let [likedState, setLikedState] = React.useState(props.liked)
-    let displayComment
     let [data, setData] = React.useState(null)
+    let [c, setC] = React.useState(null)
     let [likes, setLikes] = React.useState(props.likes)
-    let PostId  = props._id
-    if (props.comments !== []) {displayComment = props.comments.slice(0, 2)}
-    else{displayComment = []}
+    let PostId = props._id
+    let [displayComment,setDisplayComment] = React.useState(props.comments)
+    // if (props.comments !== []) { displayComment = props.comments.slice(0, 2) }
+    // else { displayComment = [] }
     function changeHandler(e) {
         let val = e.target.value
         setValue(val)
@@ -25,41 +26,53 @@ export default function Post(props) {
             setButtonD(true)
         }
     }
-    function openEmojiBox(){
-        if(showEmoji){
+    function openEmojiBox() {
+        if (showEmoji) {
             setShowEmoji(false)
         }
-        else{
+        else {
             setShowEmoji(true)
         }
     }
-    function addEmoji(e){
-        let emoji  = e.target.innerText
-        setValue(previous=>previous+emoji)
+    function addEmoji(e) {
+        let emoji = e.target.innerText
+        setValue(previous => previous + emoji)
         setButtonD(true)
     }
-    function like(){
+    function like() {
         setAnimationState('running')
         setTimeout(() => {
             setAnimationState('paused')
         }, 1000);
         apiPost("post/likeaction", { likedAction: true, PostId }, setData)
-        if(!likedState){
-            setLikes(likes+1)
+        if (!likedState) {
+            setLikes(likes + 1)
             setLikedState(true)
         }
     }
-    function likeButton(){
-        if(likedState){
+    function likeButton() {
+        if (likedState) {
             apiPost("post/likeaction", { likedAction: false, PostId }, setData)
             setLikedState(false)
-            setLikes(likes-1)
-        }else{
+            setLikes(likes - 1)
+        } else {
             apiPost("post/likeaction", { likedAction: true, PostId }, setData)
             setLikedState(true)
-            setLikes(likes+1)
+            setLikes(likes + 1)
         }
     }
+    function handleSubmit(e) {
+        e.preventDefault()
+        apiPost("post/comment", { Comment: value, PostId }, setC)
+        setButtonD(false)
+    }
+    React.useEffect(() => {
+        if (c){
+            console.log(c)
+            setDisplayComment([...displayComment, { Comment: value, from: {Username: c.user} }])
+            setValue('')
+        }
+    },[c])
     return (
         <>
             <PostCard animation={AnimationState}>
@@ -83,12 +96,12 @@ export default function Post(props) {
                     <div className='caption-section'>
                         <div><span><H to={props.from}>{props.from}</H></span><p>{props.caption}</p></div>
                     </div>
-                    <Link to='/' className='comment-button'>View all comments</Link>
+                    <Link to={`/post/${PostId}`} className='comment-button'>View all comments</Link>
                     <div className='comment-section'>
                         {displayComment === [] ? 'No comments' : <>
-                        {displayComment.map((comment,index) => (
-                            <div key={index} className='container'><span><H to={comment.from}>{comment.from}</H></span><p>{comment.data}</p></div>
-                        ))}
+                            {displayComment.map((comment, index) => (
+                                <div key={index} className='container'><span><H to={comment.from.Username}>{comment.from.Username}</H></span><p>{comment.Comment}</p></div>
+                            ))}
                         </>}
                     </div>
                     <CommentSection>
@@ -146,8 +159,10 @@ export default function Post(props) {
                             <span onClick={addEmoji}>❣</span>
                             <span onClick={addEmoji}>💛</span>
                         </Emoji>
-                        <input type='text' placeholder='Add a comment...' onChange={changeHandler} value={value} />
-                        <input type='submit' value='Post' disabled={!buttonD} />
+                        <form onSubmit={(e)=>handleSubmit(e)}>
+                            <input type='text' placeholder='Add a comment...' onChange={changeHandler} value={value} />
+                            <input type='submit' value='Post' disabled={!buttonD} />
+                        </form>
                     </CommentSection>
                 </Foot>
             </PostCard>
@@ -199,7 +214,7 @@ const PostCard = styled.div`
             transform: scale(0);
             animation: ${LikeHeartAnimation} 1s ease-in-out infinite;
             z-index: 54;
-            animation-play-state: ${props=> props.animation};
+            animation-play-state: ${props => props.animation};
         }
     }
 `
@@ -238,6 +253,7 @@ const PostImg = styled.img`
     border-radius: 10px;
     min-height: 300px;
     z-index: 50;
+    max-height: 550px;
 `
 const Foot = styled.div`
     width: 100%;
@@ -290,6 +306,7 @@ const Foot = styled.div`
         font-weight: 500;
         font-size: 14px;
         margin-bottom: 2px;
+        cursor: pointer;
     }
     .comment-section{
         align-self: flex-start;
@@ -344,12 +361,20 @@ const CommentSection = styled.section`
     margin: 20px 0;
     margin-bottom: 15px;
     position: relative;
+    form{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     input[type='text']{
         width: 80%;
         border: none;
         outline: none;
         color: #262626;
         font-size: 14px;
+        flex: 1;
+        margin-left: 10px;
     }
     input[type='submit']{
         background-color: transparent;
@@ -379,6 +404,7 @@ const Emoji = styled.div`
     width: max-content;
     height: 0px;
     opacity: 0;
+    pointer-events: none;
     span{
         text-align: center;
         cursor: pointer;
@@ -387,9 +413,10 @@ const Emoji = styled.div`
         opacity: 0;
         pointer-events: none;
     }
-    ${props=> props.show && css`
+    ${props => props.show && css`
         height: 170px;
         opacity: 1;
+        pointer-events: fill;
         span{
             pointer-events: fill;
             opacity: 1;

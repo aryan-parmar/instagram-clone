@@ -1,11 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import { apiCheckLogin } from '../functions/basic'
+import apiPost, { apiCheckLogin } from '../functions/basic'
 import Loading from './Loading'
 
 export default function EditProfile() {
     let [User, setUser] = React.useState(null)
+    let [e,setE] = React.useState(null)
     let navigate = useNavigate();
     React.useEffect(() => {
         apiCheckLogin(setUser)
@@ -68,12 +69,22 @@ export default function EditProfile() {
             document.querySelector('.profile').src = URL.createObjectURL(file)
         }
     }, [file])
+    function handleSubmit(e) {
+        e.preventDefault()
+        let formData = new FormData()
+        formData.append('Username', Username)
+        formData.append('FullName', FullName)
+        formData.append('Email', Email)
+        formData.append('Bio', Bio)
+        formData.append('ProfilePicture', file)
+        apiPost('profile/editprofile', formData, setE)
+    }
     return (
         <>
             {User && !User['err']
                 ?
                 <Container>
-                    <Form>
+                    <Form onSubmit={(e)=>handleSubmit(e)}>
                         <h3>Edit Profile</h3>
                         <div className='profile-section'>
                             <input type="file" onChange={(e) => setFile(e.target.files[0])} accept="image/png, image/jpg, image/gif, image/jpeg" />
@@ -119,7 +130,10 @@ let Form = styled.form`
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    width: 50%;
+    width: 98%;
+    @media (min-width: 425px) {
+        width: 50%;
+    }
     .profile-section{
         display: flex;
         justify-content: flex-start;

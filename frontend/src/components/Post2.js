@@ -10,9 +10,9 @@ export default function Post2(props) {
     let [showEmoji, setShowEmoji] = React.useState(false)
     let [AnimationState, setAnimationState] = React.useState('paused')
     let [likedState, setLikedState] = React.useState(props.liked)
-    let displayComment
-    if (props.comments !== []) { displayComment = props.comments }
-    else { displayComment = [] }
+    let [displayComment,setDisplayComment] = React.useState(props.comments)
+    console.log(props.comments)
+    let [c, setC] = React.useState(null)
     let [data, setData] = React.useState(null)
     let [likes, setLikes] = React.useState(props.likes)
     let PostId  = props._id
@@ -60,6 +60,18 @@ export default function Post2(props) {
             setLikes(likes+1)
         }
     }
+    function handleSubmit(e) {
+        e.preventDefault()
+        apiPost("post/comment", { Comment: value, PostId }, setC)
+        setButtonD(false)
+    }
+    React.useEffect(() => {
+        if (c){
+            console.log(c)
+            setDisplayComment([...displayComment, { Comment: value, from: {Username: c.user} }])
+            setValue('')
+        }
+    },[c])
     return (
         <>
             <PostCard animation={AnimationState}>
@@ -77,7 +89,7 @@ export default function Post2(props) {
                         </div>
                         {displayComment === [] ? 'No comments' : <>
                             {displayComment.map((comment, index) => (
-                                <div key={index} className='container'><p><span><H to={"/"+comment.from}>{comment.from}</H></span>{comment.data}</p></div>
+                                <div key={index} className='container'><p><span><H to={"/"+comment.from.Username}>{comment.from.Username}</H></span>{comment.Comment}</p></div>
                             ))}
                         </>}
                     </div>
@@ -146,8 +158,10 @@ export default function Post2(props) {
                             <span onClick={addEmoji}>❣</span>
                             <span onClick={addEmoji}>💛</span>
                         </Emoji>
-                        <input type='text' placeholder='Add a comment...' onChange={changeHandler} value={value} />
-                        <input type='submit' value='Post' disabled={!buttonD} />
+                        <form onSubmit={(e)=>handleSubmit(e)}>
+                            <input type='text' placeholder='Add a comment...' onChange={changeHandler} value={value} />
+                            <input type='submit' value='Post' disabled={!buttonD} />
+                        </form>
                     </CommentSection>
                 </Foot>
             </PostCard>
@@ -346,7 +360,11 @@ const Foot = styled.div`
             margin: 20px 0;
             text-align: left;
             display: flex;
+            align-items: center;
             p{
+                display: flex;
+                align-items: center;
+                width: 100%;
                 font-size: 14px;
                 margin: 0;
                 font-weight: 400;
@@ -394,8 +412,14 @@ const CommentSection = styled.section`
     margin: 20px 0;
     margin-bottom: 15px;
     position: relative;
+    form{
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
     input[type='text']{
-        width: 80%;
+        flex: 1;
         border: none;
         outline: none;
         color: #262626;
